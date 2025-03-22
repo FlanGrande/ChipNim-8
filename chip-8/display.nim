@@ -1,0 +1,1 @@
+# 64x32 pixels display
