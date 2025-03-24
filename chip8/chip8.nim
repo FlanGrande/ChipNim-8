@@ -61,7 +61,7 @@ type
         memory: array[4096, uint8]
         V: array[16, uint8]           # 16 general purpose registers V0 to VF
         I: uint16                     # Index register
-        pc: uint16                    # Program counter
+        pc*: uint16                    # Program counter
         gfx: array[64 * 32, uint8]    # Graphics: 64x32 monochrome display
         delay_timer: uint8
         sound_timer: uint8
@@ -71,5 +71,13 @@ type
 
 proc initChip8*(): Chip8 =
     result = Chip8()
-    result.pc = 0x200              # Programs start at 0x200
-    # Load fontset, clear memory, etc. can go here later
+    result.pc = 0x0200              # Programs start at 0x200
+
+proc readMemory*(chip8: var Chip8, address: uint16): uint8 =
+    result = chip8.memory[address]
+
+proc advancePC*(chip8: var Chip8) =
+    chip8.pc += 2
+
+proc clearScreen*(chip8: var Chip8) =
+    chip8.gfx = default(array[64 * 32, uint8])
