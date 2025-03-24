@@ -3,19 +3,22 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "nim: build current file (for debugging)",
+            "label": "nim: build (for debugging)",
             "command": "nim",
             "args": [
                 "compile",
                 "-g",
                 "--debugger:native",
-                "-o:${workspaceRoot}/bin/${fileBasenameNoExtension}",
-                "${relativeFile}"
+                "--debuginfo",
+                "--linedir:on",
+                "--stacktrace:on",
+                "-o:${workspaceFolder}/bin/ChipNim8",
+                "ChipNim8.nim"
             ],
             "options": {
-                "cwd": "${workspaceRoot}"
+                "cwd": "${workspaceFolder}"
             },
-            "type": "shell",
+            "type": "shell"
         }
     ]
 }
