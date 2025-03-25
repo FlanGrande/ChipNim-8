@@ -37,6 +37,7 @@ proc main() =
                 loadI(chip8, nnn)
             of OPCODE_DRAW:
                 draw(chip8, x, y, n)
+                render(chip8.gfx)
             else:
                 echo "Unknown opcode: ", opcode
 

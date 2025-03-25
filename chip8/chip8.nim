@@ -56,13 +56,15 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
+import globals
+
 type
     Chip8* = object
-        memory: array[4096, uint8]
+        memory: array[MEMORY_SIZE, uint8]
         V: array[16, uint8]           # 16 general purpose registers V0 to VF
         I: uint16                     # Index register
-        pc*: uint16                    # Program counter
-        gfx: array[64 * 32, uint8]    # Graphics: 64x32 monochrome display
+        pc*: uint16                   # Program counter
+        gfx*: array[DISPLAY_SIZE, uint8]    # Graphics: 64x32 monochrome display
         delay_timer: uint8
         sound_timer: uint8
         stack: array[16, uint16]
@@ -80,22 +82,40 @@ proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
 
 proc clearScreen*(chip8: var Chip8) =
-    chip8.gfx = default(array[64 * 32, uint8])
+    chip8.gfx = default(array[DISPLAY_SIZE, uint8])
 
-proc jump*(chip8: var Chip8, address: uint16) =
-    chip8.pc = address
+proc jump*(chip8: var Chip8, nnn: uint16) =
+    chip8.pc = nnn
 
-proc loadVx*(chip8: var Chip8, x: uint16, data: uint16) =
-    let shiftedData: uint8 = uint8(data)
-    chip8.V[x] = shiftedData
+# Caution: Chip8 registers are 8-bit, so we need to cast kk to uint8
+# This might end up with unexpected results if kk is not in the range [0, 255]
+# Maybe it would wrap around, but I'm not even sure
+proc loadVx*(chip8: var Chip8, x: uint16, kk: uint16) =
+    chip8.V[x] = uint8(kk)
 
-proc addVx*(chip8: var Chip8, x: uint16, data: uint16) =
-    let shiftedData: uint8 = uint8(data)
-    chip8.V[x] = (chip8.V[x] + shiftedData) and 0xFF
+proc addVx*(chip8: var Chip8, x: uint16, kk: uint16) =
+    chip8.V[x] = (chip8.V[x] + uint8(kk))
 
-proc loadI*(chip8: var Chip8, address: uint16) =
-    chip8.I = address
+proc loadI*(chip8: var Chip8, nnn: uint16) =
+    chip8.I = nnn
 
 proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16) =
-    # Do nothing for now
-    return
+    let coordX = chip8.V[x] mod DISPLAY_WIDTH
+    let coordY = chip8.V[y] mod DISPLAY_HEIGHT
+
+    chip8.V[0xF] = 0 # Why do we do this?
+
+    for row in 0..<uint(n):
+        let spriteByte = chip8.memory[chip8.I + row]
+
+        for bit in 0..<uint(SPRITE_WIDTH):
+            let pixelX = (coordX + bit) mod DISPLAY_WIDTH
+            let pixelY = (coordY + row) mod DISPLAY_HEIGHT
+            let index = pixelX + pixelY * DISPLAY_WIDTH
+
+            let spritePixel = (spriteByte shr (7 - bit)) and 1
+            let oldPixel = chip8.gfx[index]
+            chip8.gfx[index] = oldPixel xor spritePixel
+
+            if oldPixel == 1 and spritePixel == 1:
+                chip8.V[0xF] = 1

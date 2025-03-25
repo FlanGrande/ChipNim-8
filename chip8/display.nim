@@ -13,15 +13,41 @@ Chip-8 sprites may be up to 15 bytes. for a possible sprite size of 8x15.
 
 ]#
 
-#[
-ij0 1 2 3 4 5 6 7
-0 0 0 0 0 0 0 0 0
-1 0 0 0 0 0 0 0 0
-2 0 0 0 1 0 0 0 0
-3 0 0 0 0 0 0 0 0
+import sdl3
+import globals
 
-00000000 00000000 00010000 00000000
-01234567 89012345 67890123 45678901
+proc render*(gfx: array[DISPLAY_SIZE, uint8]) =
+    echo "Rendering" # TODO: Implement rendering
 
-position 19 = w * i + j = 8 * 2 + 3
-]#
+if not SDL_Init(SDL_INIT_VIDEO):
+    quit("SDL_Init Error: " & $SDL_GetError())
+
+let win = SDL_CreateWindow("Hello SDL3", 640, 480, 0)
+if win == nil:
+    quit("SDL_CreateWindow Error: " & $SDL_GetError())
+
+let renderer = SDL_CreateRenderer(win, nil)
+if renderer == nil:
+    quit("SDL_CreateRenderer Error: " & $SDL_GetError())
+
+var running: bool = true
+var event: SDL_Event # I think this is already a pointer, no need to use (addr)
+
+while running:
+  while SDL_PollEvent(event):
+    if event.type == SDL_EventQuit:
+      running = false
+
+  # Clear the screen
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)
+  SDL_RenderClear(renderer)
+
+  # TODO: Call your emulator's render logic here
+  # render(chip8)
+
+  # Present the result
+  SDL_RenderPresent(renderer)
+
+SDL_DestroyRenderer(renderer)
+SDL_DestroyWindow(win)
+SDL_Quit()
