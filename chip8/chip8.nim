@@ -7,7 +7,7 @@ Programs start running at 0x200, 0x000-0x1FF is reserved for the interpreter
 Some programs start at 0x600
 
 Memory Map:
-+---------------+= 0xFFF (4095) End of Chip-8 RAM
++---------------+= 0xFFF (4096) End of Chip-8 RAM
 |               |
 |               |
 |               |
@@ -81,3 +81,21 @@ proc advancePC*(chip8: var Chip8) =
 
 proc clearScreen*(chip8: var Chip8) =
     chip8.gfx = default(array[64 * 32, uint8])
+
+proc jump*(chip8: var Chip8, address: uint16) =
+    chip8.pc = address
+
+proc loadVx*(chip8: var Chip8, x: uint16, data: uint16) =
+    let shiftedData: uint8 = uint8(data)
+    chip8.V[x] = shiftedData
+
+proc addVx*(chip8: var Chip8, x: uint16, data: uint16) =
+    let shiftedData: uint8 = uint8(data)
+    chip8.V[x] = (chip8.V[x] + shiftedData) and 0xFF
+
+proc loadI*(chip8: var Chip8, address: uint16) =
+    chip8.I = address
+
+proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16) =
+    # Do nothing for now
+    return
