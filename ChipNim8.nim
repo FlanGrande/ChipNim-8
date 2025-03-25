@@ -1,15 +1,35 @@
+import sdl3
 import chip8/chip8
-import chip8/opcodes
 import chip8/display
+import chip8/globals
+import chip8/opcodes
 
 proc main() =
     # Chip-8 Emulator loop
+    if not SDL_Init(SDL_INIT_VIDEO):
+        quit("SDL_Init Error: " & $SDL_GetError())
 
+    let win = SDL_CreateWindow("Hello SDL2", PIXEL_WIDTH * DISPLAY_WIDTH, PIXEL_HEIGHT * DISPLAY_HEIGHT, 0)
+    if win == nil:
+        quit("SDL_CreateWindow Error: " & $SDL_GetError())
+
+    let renderer = SDL_CreateRenderer(win, nil)
+    if renderer == nil:
+        quit("SDL_CreateRenderer Error: " & $SDL_GetError())
+
+    
     # Initialize Chip8
     var chip8: Chip8 = initChip8()
+    var running: bool = true
+    var event: SDL_Event # I think this is already a pointer, no need to use (addr)
 
-    # Main loop
-    while true:
+    while running:
+        var requestFrame: bool = false
+
+        while SDL_PollEvent(event):
+            if event.type == SDL_EventQuit:
+                running = false
+
         # Fetch
         let opcode1: uint8 = readMemory(chip8, chip8.pc)
         let opcode2: uint8 = readMemory(chip8, chip8.pc + uint16(1))
@@ -36,8 +56,7 @@ proc main() =
             of OPCODE_LD_I_NNN:
                 loadI(chip8, nnn)
             of OPCODE_DRAW:
-                draw(chip8, x, y, n)
-                render(chip8.gfx)
+                requestFrame = draw(chip8, x, y, n)
             else:
                 echo "Unknown opcode: ", opcode
 
@@ -45,8 +64,16 @@ proc main() =
         if chip8.pc > 0xFFF:
             echo "Program finished"
             break
-        
-        
 
+        if requestFrame:
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)
+            SDL_RenderClear(renderer)
+            render(renderer, chip8.gfx)
+            SDL_RenderPresent(renderer)
+
+    # Cleanup
+    SDL_DestroyRenderer(renderer)
+    SDL_DestroyWindow(win)
+    SDL_Quit()
 
 main()

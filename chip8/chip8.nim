@@ -99,9 +99,10 @@ proc addVx*(chip8: var Chip8, x: uint16, kk: uint16) =
 proc loadI*(chip8: var Chip8, nnn: uint16) =
     chip8.I = nnn
 
-proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16) =
+proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16): bool =
     let coordX = chip8.V[x] mod DISPLAY_WIDTH
     let coordY = chip8.V[y] mod DISPLAY_HEIGHT
+    var didDraw: bool = false
 
     chip8.V[0xF] = 0 # Why do we do this?
 
@@ -119,3 +120,8 @@ proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16) =
 
             if oldPixel == 1 and spritePixel == 1:
                 chip8.V[0xF] = 1
+            
+            if spritePixel == 1:
+                didDraw = true
+
+    return didDraw
