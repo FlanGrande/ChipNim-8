@@ -56,11 +56,11 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals
+import globals, std/os, std/streams
 
 type
     Chip8* = object
-        memory: array[MEMORY_SIZE, uint8]
+        memory*: array[MEMORY_SIZE, uint8]
         V: array[16, uint8]           # 16 general purpose registers V0 to VF
         I: uint16                     # Index register
         pc*: uint16                   # Program counter
@@ -73,7 +73,17 @@ type
 
 proc initChip8*(): Chip8 =
     result = Chip8()
-    result.pc = 0x0200              # Programs start at 0x200
+    result.pc = PROGRAM_START              # Programs start at 0x200
+
+    for i in 0..<FONTSET.len:
+        result.memory[FONTSET_START + i] = FONTSET[i]
+
+proc tickTimers*(chip8: var Chip8) =
+    if chip8.delay_timer > 0:
+        dec chip8.delay_timer
+
+    if chip8.sound_timer > 0:
+        dec chip8.sound_timer
 
 proc readMemory*(chip8: var Chip8, address: uint16): uint8 =
     result = chip8.memory[address]
@@ -125,3 +135,19 @@ proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16): bool =
                 didDraw = true
 
     return didDraw
+
+proc loadRom*(chip8: var Chip8, filename: string) =
+    if not fileExists(filename):
+        quit("ROM file not found: " & filename)
+
+    let f = newFileStream(filename, fmRead)
+    if f == nil:
+        quit("Failed to open ROM file")
+
+    defer: f.close()
+
+    var i = 0
+    while not f.atEnd() and PROGRAM_START + i < MEMORY_SIZE:
+        let dataByte = f.readUint8()
+        chip8.memory[PROGRAM_START + i] = dataByte
+        inc i
