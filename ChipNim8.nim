@@ -28,7 +28,7 @@ proc main() =
     var missingOpcodes: seq[uint16] = @[]
 
     # Load ROM
-    loadRom(chip8, "roms/programs/SQRT Test [Sergey Naydenov, 2010].ch8")
+    loadRom(chip8, "roms/programs/IBM Logo.ch8")
 
     while running:
         # Process input
@@ -41,21 +41,20 @@ proc main() =
         
         for _ in 0..<OPCODES_PER_FRAME:
             # Fetch
-            let opcode1: uint8 = readMemory(chip8, chip8.pc)
-            let opcode2: uint8 = readMemory(chip8, chip8.pc + 1)
-            let opcode: uint16 = (opcode1.uint16 shl 8) or opcode2.uint16
-            # let opcode = (chip8.memory[chip8.pc].uint16 shl 8) or chip8.memory[chip8.pc + 1].uint16
+            let opcode1: uint16 = readMemory(chip8, chip8.pc).uint16 shl 8
+            let opcode2: uint16 = readMemory(chip8, chip8.pc + 1).uint16
+            let opcode: uint16 = opcode1 or opcode2
 
             advancePC(chip8)
 
             # Decode
             let nnn: uint16 = opcode and MASK_NNN
-            let x: uint16 = (opcode and MASK_X) shr 8
-            let y: uint16 = (opcode and MASK_Y) shr 4
-            let n: uint16 = opcode and MASK_N
-            let kk: uint16 = opcode and MASK_KK
+            let x: uint8 = ((opcode and MASK_X) shr 8).uint8
+            let y: uint8 = ((opcode and MASK_Y) shr 4).uint8
+            let n: uint8 = (opcode and MASK_N).uint8
+            let kk: uint8 = (opcode and MASK_KK).uint8
             
-            echo "Opcode: ", toHex(opcode, 4)
+            echo "opcode: ", toHex(opcode, 4)
             echo "nnn: ", toHex(nnn, 4)
             echo "x: ", toHex(x, 4)
             echo "y: ", toHex(y, 4)

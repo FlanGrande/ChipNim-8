@@ -91,6 +91,9 @@ proc readMemory*(chip8: var Chip8, address: uint16): uint8 =
 proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
 
+
+
+
 proc clearScreen*(chip8: var Chip8) =
     chip8.gfx = default(array[DISPLAY_SIZE, uint8])
 
@@ -100,16 +103,16 @@ proc jump*(chip8: var Chip8, nnn: uint16) =
 # Caution: Chip8 registers are 8-bit, so we need to cast kk to uint8
 # This might end up with unexpected results if kk is not in the range [0, 255]
 # Maybe it would wrap around, but I'm not even sure
-proc loadVx*(chip8: var Chip8, x: uint16, kk: uint16) =
-    chip8.V[x] = uint8(kk)
+proc loadVx*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.V[x] = kk
 
-proc addVx*(chip8: var Chip8, x: uint16, kk: uint16) =
-    chip8.V[x] = (chip8.V[x] + uint8(kk))
+proc addVx*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.V[x] += kk
 
 proc loadI*(chip8: var Chip8, nnn: uint16) =
     chip8.I = nnn
 
-proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16): bool =
+proc draw*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
     let coordX = chip8.V[x] mod DISPLAY_WIDTH
     let coordY = chip8.V[y] mod DISPLAY_HEIGHT
     var didDraw: bool = false
@@ -135,6 +138,9 @@ proc draw*(chip8: var Chip8, x: uint16, y: uint16, n: uint16): bool =
                 didDraw = true
 
     return didDraw
+
+
+
 
 proc loadRom*(chip8: var Chip8, filename: string) =
     if not fileExists(filename):
