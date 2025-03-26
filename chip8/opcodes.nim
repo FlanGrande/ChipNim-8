@@ -1,16 +1,21 @@
-# Chip-8 Opcodes
+# Chip-8 Opcodes Masks
 const
     OPCODE_CLS* = 0x00E0
+    OPCODE_RET* = 0x00EE
     OPCODE_JP* = 0x1000
-
+    OPCODE_CALL* = 0x2000
+    OPCODE_SE_VX_KK* = 0x3000
+    OPCODE_SNE_VX_KK* = 0x4000
+    OPCODE_SE_VX_VY* = 0x5000
     OPCODE_LD_VX_KK* = 0x6000
     OPCODE_ADD_VX_KK* = 0x7000
-
+    OPCODE_VX_VY_LOGIC* = 0x8000
+    OPCODE_SNE_VX_VY* = 0x9000
     OPCODE_LD_I_NNN* = 0xA000 
 
     OPCODE_DRAW* = 0xD000
 
-# Masks
+# Variable Masks
 const
     MASK_OPCODE* = 0xF000
     MASK_NNN* = 0x0FFF
