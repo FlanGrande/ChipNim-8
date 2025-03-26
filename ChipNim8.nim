@@ -1,5 +1,6 @@
 import sdl3
 import std/strutils
+import sequtils
 import chip8/chip8
 import chip8/display
 import chip8/globals
@@ -24,8 +25,10 @@ proc main() =
     var running: bool = true
     var event: SDL_Event # I think this is already a pointer, no need to use (addr)
 
+    var missingOpcodes: seq[uint16] = @[]
+
     # Load ROM
-    loadRom(chip8, "roms/programs/IBM Logo.ch8")
+    loadRom(chip8, "roms/programs/SQRT Test [Sergey Naydenov, 2010].ch8")
 
     while running:
         # Process input
@@ -66,6 +69,7 @@ proc main() =
                     else:
                         if opcode != 0x0000:
                             echo "Unknown opcode: ", toHex(opcode, 4)
+                            missingOpcodes.add(opcode)
                 of OPCODE_JP:
                     jump(chip8, nnn)
                 of OPCODE_LD_VX_KK:
@@ -78,6 +82,7 @@ proc main() =
                     requestFrame = draw(chip8, x, y, n)
                 else:
                     echo "Unknown opcode: ", toHex(opcode, 4)
+                    missingOpcodes.add(opcode)
 
             if chip8.pc > 0xFFF:
                 echo "Program finished"
@@ -96,6 +101,9 @@ proc main() =
         SDL_RenderClear(renderer)
         render(renderer, chip8.gfx)
         SDL_RenderPresent(renderer)
+
+        if missingOpcodes.len > 0:
+            echo "Missing opcodes: " & missingOpcodes.deduplicate().map(toHex).join(", ")
         
     # Cleanup
     SDL_DestroyRenderer(renderer)
