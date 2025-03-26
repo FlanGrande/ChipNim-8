@@ -41,9 +41,9 @@ proc main() =
         
         for _ in 0..<OPCODES_PER_FRAME:
             # Fetch
-            let opcode1: uint16 = readMemory(chip8, chip8.pc).uint16 shl 8
-            let opcode2: uint16 = readMemory(chip8, chip8.pc + 1).uint16
-            let opcode: uint16 = opcode1 or opcode2
+            let hiByte: uint16 = readMemory(chip8, chip8.pc).uint16 shl 8
+            let loByte: uint16 = readMemory(chip8, chip8.pc + 1).uint16
+            let opcode: uint16 = hiByte or loByte
 
             advancePC(chip8)
 
