@@ -2,7 +2,6 @@
 const
     OPCODE_CLS* = 0x00E0            # Clear screen
     OPCODE_RET* = 0x00EE            # Return from subroutine
-    OPCODE_SYS* = 0x0000            # System call (it's actually a mask for 0nnn)
     OPCODE_JP* = 0x1000             # Jump to address
     OPCODE_CALL* = 0x2000           # Call subroutine
     OPCODE_SE_VX_KK* = 0x3000       # Skip next instruction if Vx = kk
@@ -24,7 +23,7 @@ const
     OPCODE_LD_ST_VX* = 0xF018       # Load Vx into ST
     OPCODE_ADD_I_VX* = 0xF01E       # Add Vx to I
     OPCODE_LD_F_VX* = 0xF029        # Load sprite location into I
-    OPCODE_LD_BCD_VX* = 0xF033        # Load BCD into memory
+    OPCODE_LD_BCD_VX* = 0xF033      # Load BCD into memory
     OPCODE_LD_I_VX* = 0xF055        # Load V0 to Vx into memory
     OPCODE_LD_VX_I* = 0xF065        # Load memory into V0 to Vx
 

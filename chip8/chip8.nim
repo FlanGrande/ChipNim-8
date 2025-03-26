@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, std/os, std/streams
+import globals, std/os, std/streams, std/random
 
 type
     Chip8* = object
@@ -94,25 +94,57 @@ proc advancePC*(chip8: var Chip8) =
 
 
 
-proc clearScreen*(chip8: var Chip8) =
+proc instruction_CLS*(chip8: var Chip8) =
     chip8.gfx = default(array[DISPLAY_SIZE, uint8])
 
-proc jump*(chip8: var Chip8, nnn: uint16) =
+proc instruction_RET*(chip8: var Chip8) =
+    chip8.pc = chip8.stack[chip8.sp]
+    dec chip8.sp
+
+proc instruction_JP*(chip8: var Chip8, nnn: uint16) =
     chip8.pc = nnn
 
-# Caution: Chip8 registers are 8-bit, so we need to cast kk to uint8
-# This might end up with unexpected results if kk is not in the range [0, 255]
-# Maybe it would wrap around, but I'm not even sure
-proc loadVx*(chip8: var Chip8, x: uint8, kk: uint8) =
+proc instruction_CALL*(chip8: var Chip8, nnn: uint16) =
+    inc chip8.sp
+    chip8.stack[chip8.sp] = chip8.pc
+    chip8.pc = nnn
+
+proc instruction_SE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    if chip8.V[x] == kk:
+        advancePC(chip8)
+
+proc instruction_SNE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    if chip8.V[x] != kk:
+        advancePC(chip8)
+
+proc instruction_SE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    if chip8.V[x] == chip8.V[y]:
+        advancePC(chip8)
+
+proc instruction_LD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     chip8.V[x] = kk
 
-proc addVx*(chip8: var Chip8, x: uint8, kk: uint8) =
+proc instruction_ADD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     chip8.V[x] += kk
 
-proc loadI*(chip8: var Chip8, nnn: uint16) =
+
+# TO DO: 8xy0 - 8xyE
+
+
+proc instruction_SNE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    if chip8.V[x] != chip8.V[y]:
+        advancePC(chip8)
+
+proc instruction_LD_I_nnn*(chip8: var Chip8, nnn: uint16) =
     chip8.I = nnn
 
-proc draw*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
+proc instruction_JP_V0_nnn*(chip8: var Chip8, nnn: uint16) =
+    chip8.pc = chip8.V[0] or nnn
+
+proc instruction_RND_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.V[x] = rand(256).uint8 and kk
+
+proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
     let coordX = chip8.V[x] mod DISPLAY_WIDTH
     let coordY = chip8.V[y] mod DISPLAY_HEIGHT
     var didDraw: bool = false
@@ -139,7 +171,45 @@ proc draw*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
 
     return didDraw
 
+proc instruction_SKP_Vx*(chip8: var Chip8, x: uint8) =
+    # Check if the key stored in Vx is pressed
+    discard
 
+proc instruction_SKNP_Vx*(chip8: var Chip8, x: uint8) =
+    # Check if the key stored in Vx is not pressed
+    discard
+
+proc instruction_LD_Vx_DT*(chip8: var Chip8, x: uint8) =
+    chip8.V[x] = chip8.delay_timer
+
+proc instruction_LD_Vx_K*(chip8: var Chip8, x: uint8) =
+    # Wait for a key press and store the value in Vx
+    discard
+
+proc instruction_LD_DT_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.delay_timer = chip8.V[x]
+
+proc instruction_LD_ST_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.sound_timer = chip8.V[x]
+
+proc instruction_ADD_I_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.I += chip8.V[x]
+
+proc instruction_LD_F_Vx*(chip8: var Chip8, x: uint8) =
+    # Load sprite address into I
+    discard
+
+proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
+    # Load BCD into memory
+    discard
+
+proc instruction_LD_I_Vx*(chip8: var Chip8, x: uint8) =
+    # Load V0 to Vx into memory
+    discard
+
+proc instruction_LD_Vx_I*(chip8: var Chip8, x: uint8) =
+    # Load memory into V0 to Vx
+    discard
 
 
 proc loadRom*(chip8: var Chip8, filename: string) =
