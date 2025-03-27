@@ -29,8 +29,9 @@ proc main() =
 
     # Load ROM
     #loadRom(chip8, "roms/programs/IBM Logo.ch8")
-    loadRom(chip8, "roms/programs/Fishie [Hap, 2005].ch8")
+    #loadRom(chip8, "roms/programs/Fishie [Hap, 2005].ch8")
     #loadRom(chip8, "roms/programs/Clock Program [Bill Fisher, 1981].ch8")
+    loadRom(chip8, "roms/programs/Life [GV Samways, 1980].ch8")
 
     while running:
         # Process input
