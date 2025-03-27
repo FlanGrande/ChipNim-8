@@ -70,6 +70,8 @@ type
         stack: array[16, uint16]
         sp: uint8                     # Stack pointer
         key: array[16, uint8]         # Hex-based keypad (0x0–0xF)
+        waitingForKey*: bool
+        waitingRegister: uint8
 
 proc initChip8*(): Chip8 =
     result = Chip8()
@@ -91,8 +93,16 @@ proc readMemory*(chip8: var Chip8, address: uint16): uint8 =
 proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
 
+proc keyDown*(chip8: var Chip8, key: uint8) =
+    chip8.key[key] = 1
 
+    if chip8.waitingForKey:
+        chip8.V[chip8.waitingRegister] = key
+        chip8.waitingForKey = false
+        advancePC(chip8)
 
+proc keyUp*(chip8: var Chip8, key: uint8) =
+    chip8.key[key] = 0
 
 proc instruction_CLS*(chip8: var Chip8) =
     chip8.gfx = default(array[DISPLAY_SIZE, uint8])
@@ -209,19 +219,19 @@ proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
     return didDraw
 
 proc instruction_SKP_Vx*(chip8: var Chip8, x: uint8) =
-    # Check if the key stored in Vx is pressed
-    discard
+    if chip8.key[chip8.V[x]] == 1:
+        advancePC(chip8)
 
 proc instruction_SKNP_Vx*(chip8: var Chip8, x: uint8) =
-    # Check if the key stored in Vx is not pressed
-    discard
+    if chip8.key[chip8.V[x]] == 0:
+        advancePC(chip8)
 
 proc instruction_LD_Vx_DT*(chip8: var Chip8, x: uint8) =
     chip8.V[x] = chip8.delay_timer
 
 proc instruction_LD_Vx_K*(chip8: var Chip8, x: uint8) =
-    # Wait for a key press and store the value in Vx
-    discard
+    chip8.waitingForKey = true
+    chip8.waitingRegister = x
 
 proc instruction_LD_DT_Vx*(chip8: var Chip8, x: uint8) =
     chip8.delay_timer = chip8.V[x]
@@ -236,12 +246,10 @@ proc instruction_LD_F_Vx*(chip8: var Chip8, x: uint8) =
     chip8.I = chip8.V[x] * FONTSET_WIDTH
 
 proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
-    # Define hundreds, tens, and units variables
     let hundreds = chip8.V[x] div 100
     let tens = (chip8.V[x] div 10) mod 10
     let units = chip8.V[x] mod 10
 
-    # Store hundreds, tens, and units in memory
     chip8.memory[chip8.I] = hundreds
     chip8.memory[chip8.I + 1] = tens
     chip8.memory[chip8.I + 2] = units

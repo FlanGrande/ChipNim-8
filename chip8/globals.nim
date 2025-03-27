@@ -1,3 +1,5 @@
+import sdl3
+
 # Constants
 const
     MEMORY_SIZE* = 4096
@@ -31,4 +33,22 @@ const FONTSET*: array[80, uint8] = [
     0xE0, 0x90, 0x90, 0x90, 0xE0, # D
     0xF0, 0x80, 0xF0, 0x80, 0xF0, # E
     0xF0, 0x80, 0xF0, 0x80, 0x80  # F
+]
+
+#[
+
+1	2	3	C
+4	5	6	D
+7	8	9	E
+A	0	B	F
+
+]#
+
+const SDLK_SCANCODE_TO_KEYCODE*: array[16, SDL_Scancode] = [
+    SDL_SCANCODE_X,
+    SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3,
+    SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E,
+    SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D,
+    SDL_SCANCODE_Z, SDL_SCANCODE_C, SDL_SCANCODE_4,
+    SDL_SCANCODE_R, SDL_SCANCODE_F, SDL_SCANCODE_V
 ]
