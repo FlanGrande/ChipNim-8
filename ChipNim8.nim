@@ -28,8 +28,9 @@ proc main() =
     var missingOpcodes: seq[uint16] = @[]
 
     # Load ROM
-    # loadRom(chip8, "roms/programs/IBM Logo.ch8")
-    loadRom(chip8, "roms/programs/Jumping X and O [Harry Kleinberg, 1977].ch8")
+    #loadRom(chip8, "roms/programs/IBM Logo.ch8")
+    loadRom(chip8, "roms/programs/Fishie [Hap, 2005].ch8")
+    #loadRom(chip8, "roms/programs/Clock Program [Bill Fisher, 1981].ch8")
 
     while running:
         # Process input
@@ -62,62 +63,93 @@ proc main() =
             echo "n: ", toHex(n, 4)
             echo "kk: ", toHex(kk, 4)
 
-            case opcode and MASK_OPCODE:
+            case opcode and 0xF000:
                 of 0x0000:
-                    if opcode == OPCODE_CLS: # Later on I can match with OPCODE_RET, and others in the same line
+                    if opcode == OPCODE_CLS:
                         instruction_CLS(chip8)
                     elif opcode == OPCODE_RET:
                         instruction_RET(chip8)
                     else:
                         echo "Unknown opcode: ", toHex(opcode, 4)
                         missingOpcodes.add(opcode)
-                of OPCODE_JP:
+                of 0x1000:
                     instruction_JP(chip8, nnn)
-                of OPCODE_CALL:
+                of 0x2000:
                     instruction_CALL(chip8, nnn)
-                of OPCODE_SE_VX_KK:
+                of 0x3000:
                     instruction_SE_Vx_kk(chip8, x, kk)
-                of OPCODE_SNE_VX_KK:
+                of 0x4000:
                     instruction_SNE_Vx_kk(chip8, x, kk)
-                of OPCODE_SE_VX_VY:
+                of 0x5000:
                     instruction_SE_Vx_Vy(chip8, x, y)
-                of OPCODE_LD_VX_KK:
+                of 0x6000:
                     instruction_LD_Vx_kk(chip8, x, kk)
-                of OPCODE_ADD_VX_KK:
+                of 0x7000:
                     instruction_ADD_Vx_kk(chip8, x, kk)
                 # TO DO: 8xy0 - 8xyE
-                of OPCODE_SNE_VX_VY:
+                # of 0x8000:
+                #     if opcode == OPCODE_LD_Vx_Vy:
+                #         instruction_LD_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_OR_Vx_Vy:
+                #         instruction_OR_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_AND_Vx_Vy:
+                #         instruction_AND_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_XOR_Vx_Vy:
+                #         instruction_XOR_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_ADD_Vx_Vy:
+                #         instruction_ADD_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_SUB_Vx_Vy:
+                #         instruction_SUB_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_SHR_Vx:
+                #         instruction_SHR_Vx(chip8, x)
+                #     elif opcode == OPCODE_SUBN_Vx_Vy:
+                #         instruction_SUBN_Vx_Vy(chip8, x, y)
+                #     elif opcode == OPCODE_SHL_Vx:
+                #         instruction_SHL_Vx(chip8, x)
+                #     else:
+                #         echo "Unknown opcode: ", toHex(opcode, 4)
+                #         missingOpcodes.add(opcode)
+                of 0x9000:
                     instruction_SNE_Vx_Vy(chip8, x, y)
-                of OPCODE_LD_I_NNN:
+                of 0xA000:
                     instruction_LD_I_nnn(chip8, nnn)
-                of OPCODE_JP_V0_NNN:
+                of 0xB000:
                     instruction_JP_V0_nnn(chip8, nnn)
-                of OPCODE_RND_VX_KK:
+                of 0xC000:
                     instruction_RND_Vx_kk(chip8, x, kk)
-                of OPCODE_DRAW:
+                of 0xD000:
                     requestFrame = instruction_DRAW(chip8, x, y, n)
-                of OPCODE_SKP_VX:
-                    instruction_SKP_Vx(chip8, x)
-                of OPCODE_SKNP_VX:
-                    instruction_SKNP_Vx(chip8, x)
-                of OPCODE_LD_VX_DT:
-                    instruction_LD_Vx_DT(chip8, x)
-                of OPCODE_LD_VX_K:
-                    instruction_LD_Vx_K(chip8, x)
-                of OPCODE_LD_DT_VX:
-                    instruction_LD_DT_Vx(chip8, x)
-                of OPCODE_LD_ST_VX:
-                    instruction_LD_ST_Vx(chip8, x)
-                of OPCODE_ADD_I_VX:
-                    instruction_ADD_I_Vx(chip8, x)
-                of OPCODE_LD_F_VX:
-                    instruction_LD_F_Vx(chip8, x)
-                of OPCODE_LD_BCD_VX:
-                    instruction_LD_BCD_Vx(chip8, x)
-                of OPCODE_LD_I_VX:
-                    instruction_LD_I_Vx(chip8, x)
-                of OPCODE_LD_VX_I:
-                    instruction_LD_Vx_I(chip8, x)
+                of 0xE000:
+                    if opcode == OPCODE_SKP_VX:
+                        instruction_SKP_Vx(chip8, x)
+                    elif opcode == OPCODE_SKNP_VX:
+                        instruction_SKNP_Vx(chip8, x)
+                    else:
+                        echo "Unknown opcode: ", toHex(opcode, 4)
+                        missingOpcodes.add(opcode)
+                of 0xF000:
+                    case opcode and 0x00FF:
+                        of 0x0007:
+                            instruction_LD_Vx_DT(chip8, x)
+                        of 0x000A:
+                            instruction_LD_Vx_K(chip8, x)
+                        of 0x0015:
+                            instruction_LD_DT_Vx(chip8, x)
+                        of 0x0018:
+                            instruction_LD_ST_Vx(chip8, x)
+                        of 0x001E:
+                            instruction_ADD_I_Vx(chip8, x)
+                        of 0x0029:
+                            instruction_LD_F_Vx(chip8, x)
+                        of 0x0033:
+                            instruction_LD_BCD_Vx(chip8, x)
+                        of 0x0055:
+                            instruction_LD_I_Vx(chip8, x)
+                        of 0x0065:
+                            instruction_LD_Vx_I(chip8, x)
+                        else:
+                            echo "Unknown opcode: ", toHex(opcode, 4)
+                            missingOpcodes.add(opcode)
                 else:
                     echo "Unknown opcode: ", toHex(opcode, 4)
                     missingOpcodes.add(opcode)
