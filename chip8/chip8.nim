@@ -104,93 +104,112 @@ proc keyDown*(chip8: var Chip8, key: uint8) =
 proc keyUp*(chip8: var Chip8, key: uint8) =
     chip8.key[key] = 0
 
+# 0x00E0
 proc instruction_CLS*(chip8: var Chip8) =
     chip8.gfx = default(array[DISPLAY_SIZE, uint8])
 
+# 0x00EE
 proc instruction_RET*(chip8: var Chip8) =
     chip8.pc = chip8.stack[chip8.sp]
     dec chip8.sp
 
+# 0x1nnn
 proc instruction_JP*(chip8: var Chip8, nnn: uint16) =
     chip8.pc = nnn
 
+# 0x2nnn
 proc instruction_CALL*(chip8: var Chip8, nnn: uint16) =
     inc chip8.sp
     chip8.stack[chip8.sp] = chip8.pc
     chip8.pc = nnn
 
+# 0x3xkk
 proc instruction_SE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     if chip8.V[x] == kk:
         advancePC(chip8)
 
+# 0x4xkk
 proc instruction_SNE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     if chip8.V[x] != kk:
         advancePC(chip8)
 
+# 0x5xy0
 proc instruction_SE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     if chip8.V[x] == chip8.V[y]:
         advancePC(chip8)
 
+# 0x6xkk
 proc instruction_LD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     chip8.V[x] = kk
 
+# 0x7xkk
 proc instruction_ADD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     chip8.V[x] += kk
 
-
-# TO DO: 8xy0 - 8xyE
+# 0x8xy0
 proc instruction_LD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[y]
 
+# 0x8xy1
 proc instruction_OR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[x] or chip8.V[y]
 
+# 0x8xy2
 proc instruction_AND_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[x] and chip8.V[y]
 
+# 0x8xy3
 proc instruction_XOR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[x] xor chip8.V[y]
 
+# 0x8xy4
 proc instruction_ADD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     let sum = chip8.V[x].uint16 + chip8.V[y].uint16
     chip8.V[x] = sum.uint8
     chip8.V[0xF] = if sum > 255: 1 else: 0
-    echo x, " ", chip8.V[x], " ", chip8.V[0xF], " ", sum
 
-# TO DO: Somehow test this works correctly
+# 0x8xy5
 proc instruction_SUB_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     let carries = chip8.V[x] >= chip8.V[y]
     chip8.V[x] = (chip8.V[x] - chip8.V[y]).uint8
     chip8.V[0xF] = if carries: 1 else: 0
 
+# 0x8xy6
 proc instruction_SHR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     let lsb = chip8.V[x] and 0x1
     chip8.V[x] = chip8.V[x] shr 1
     chip8.V[0xF] = lsb
 
+# 0x8xy7
 proc instruction_SUBN_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     let carries = chip8.V[y] >= chip8.V[x]
     chip8.V[x] = (chip8.V[y] - chip8.V[x]).uint8
     chip8.V[0xF] = if carries: 1 else: 0
 
+# 0x8xyE
 proc instruction_SHL_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     let lsb = (chip8.V[x] shr 7) and 0x1
     chip8.V[x] = chip8.V[x] shl 1
     chip8.V[0xF] = lsb
 
+# 0x9xy0
 proc instruction_SNE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     if chip8.V[x] != chip8.V[y]:
         advancePC(chip8)
 
+# 0xAnnn
 proc instruction_LD_I_nnn*(chip8: var Chip8, nnn: uint16) =
     chip8.I = nnn
 
+# 0xBnnn
 proc instruction_JP_V0_nnn*(chip8: var Chip8, nnn: uint16) =
     chip8.pc = chip8.V[0] or nnn
 
+# 0xCxkk
 proc instruction_RND_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     chip8.V[x] = rand(256).uint8 and kk
 
+# 0xDxyn
 proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
     let coordX = chip8.V[x] mod DISPLAY_WIDTH
     let coordY = chip8.V[y] mod DISPLAY_HEIGHT
@@ -218,33 +237,42 @@ proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
 
     return didDraw
 
+# 0xE09E
 proc instruction_SKP_Vx*(chip8: var Chip8, x: uint8) =
     if chip8.key[chip8.V[x]] == 1:
         advancePC(chip8)
 
+# 0xE0A1
 proc instruction_SKNP_Vx*(chip8: var Chip8, x: uint8) =
     if chip8.key[chip8.V[x]] == 0:
         advancePC(chip8)
 
+# 0xFx07
 proc instruction_LD_Vx_DT*(chip8: var Chip8, x: uint8) =
     chip8.V[x] = chip8.delay_timer
 
+# 0xFx0A
 proc instruction_LD_Vx_K*(chip8: var Chip8, x: uint8) =
     chip8.waitingForKey = true
     chip8.waitingRegister = x
 
+# 0xFx15
 proc instruction_LD_DT_Vx*(chip8: var Chip8, x: uint8) =
     chip8.delay_timer = chip8.V[x]
 
+# 0xFx18
 proc instruction_LD_ST_Vx*(chip8: var Chip8, x: uint8) =
     chip8.sound_timer = chip8.V[x]
 
+# 0xFx1E
 proc instruction_ADD_I_Vx*(chip8: var Chip8, x: uint8) =
     chip8.I += chip8.V[x]
 
+# 0xFx29
 proc instruction_LD_F_Vx*(chip8: var Chip8, x: uint8) =
     chip8.I = chip8.V[x] * FONTSET_WIDTH
 
+# 0xFx33
 proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
     let hundreds = chip8.V[x] div 100
     let tens = (chip8.V[x] div 10) mod 10
@@ -254,10 +282,12 @@ proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
     chip8.memory[chip8.I + 1] = tens
     chip8.memory[chip8.I + 2] = units
 
+# 0xFx55
 proc instruction_LD_I_Vx*(chip8: var Chip8, x: uint8) =
     for i in uint8(0)..x:
         chip8.memory[chip8.I + i] = chip8.V[i]
 
+# 0xFx65
 proc instruction_LD_Vx_I*(chip8: var Chip8, x: uint8) =
     for i in uint8(0)..x:
         chip8.V[i] = chip8.memory[chip8.I + i]
