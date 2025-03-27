@@ -32,7 +32,8 @@ proc main() =
     #loadRom(chip8, "roms/programs/Fishie [Hap, 2005].ch8")
     #loadRom(chip8, "roms/programs/Clock Program [Bill Fisher, 1981].ch8")
     #loadRom(chip8, "roms/programs/Life [GV Samways, 1980].ch8")
-    loadRom(chip8, "roms/games/Tetris [Fran Dachille, 1991].ch8")
+    #loadRom(chip8, "roms/games/Tetris [Fran Dachille, 1991].ch8")
+    loadRom(chip8, "downloadedRoms/3-corax+.ch8")
 
     while running:
         # Process input
