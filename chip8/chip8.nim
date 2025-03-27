@@ -153,14 +153,17 @@ proc instruction_LD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
 # 0x8xy1
 proc instruction_OR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[x] or chip8.V[y]
+    chip8.V[0xF] = 0 # Chip-8 quirk
 
 # 0x8xy2
 proc instruction_AND_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[x] and chip8.V[y]
+    chip8.V[0xF] = 0 # Chip-8 quirk
 
 # 0x8xy3
 proc instruction_XOR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     chip8.V[x] = chip8.V[x] xor chip8.V[y]
+    chip8.V[0xF] = 0 # Chip-8 quirk
 
 # 0x8xy4
 proc instruction_ADD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
@@ -210,21 +213,28 @@ proc instruction_RND_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
     chip8.V[x] = rand(256).uint8 and kk
 
 # 0xDxyn
-proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8): bool =
+proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8, wrap: bool = false): bool =
     let coordX = chip8.V[x] mod DISPLAY_WIDTH
     let coordY = chip8.V[y] mod DISPLAY_HEIGHT
     var didDraw: bool = false
 
-    chip8.V[0xF] = 0 # Why do we do this?
+    chip8.V[0xF] = 0
 
     for row in 0..<uint(n):
         let spriteByte = chip8.memory[chip8.I + row]
 
         for bit in 0..<uint(SPRITE_WIDTH):
-            let pixelX = (coordX + bit) mod DISPLAY_WIDTH
-            let pixelY = (coordY + row) mod DISPLAY_HEIGHT
-            let index = pixelX + pixelY * DISPLAY_WIDTH
+            var pixelX = coordX + bit
+            var pixelY = coordY + row
 
+            if pixelX >= DISPLAY_WIDTH or pixelY >= DISPLAY_HEIGHT:
+                if wrap:
+                    pixelX = (coordX + bit) mod DISPLAY_WIDTH
+                    pixelY = (coordY + row) mod DISPLAY_HEIGHT
+                else:
+                    continue # Chip-8 quirk: clipping instead of wrapping around
+            
+            let index = pixelX + pixelY * DISPLAY_WIDTH
             let spritePixel = (spriteByte shr (7 - bit)) and 1
             let oldPixel = chip8.gfx[index]
             chip8.gfx[index] = oldPixel xor spritePixel
@@ -286,12 +296,15 @@ proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
 proc instruction_LD_I_Vx*(chip8: var Chip8, x: uint8) =
     for i in uint8(0)..x:
         chip8.memory[chip8.I + i] = chip8.V[i]
+    
+    chip8.I += x + 1 # Chip8 quirk
 
 # 0xFx65
 proc instruction_LD_Vx_I*(chip8: var Chip8, x: uint8) =
     for i in uint8(0)..x:
         chip8.V[i] = chip8.memory[chip8.I + i]
-
+    
+    chip8.I += x + 1 # Chip8 quirk
 
 proc loadRom*(chip8: var Chip8, filename: string) =
     if not fileExists(filename):
