@@ -179,9 +179,16 @@ proc instruction_SUB_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
 
 # 0x8xy6
 proc instruction_SHR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    # Storing shifted Vy in Vx is a quirk of the Chip-8
+    let shiftedVy = chip8.V[y] shr 1
     let lsb = chip8.V[x] and 0x1
-    chip8.V[x] = chip8.V[x] shr 1
+    chip8.V[x] = shiftedVy
     chip8.V[0xF] = lsb
+
+    # This version would be used on different Chip-8 interpreters
+    # let lsb = chip8.V[x] and 0x1
+    # chip8.V[x] = chip8.V[x] shr 1
+    # chip8.V[0xF] = lsb
 
 # 0x8xy7
 proc instruction_SUBN_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
@@ -191,9 +198,16 @@ proc instruction_SUBN_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
 
 # 0x8xyE
 proc instruction_SHL_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    # Storing shifted Vy in Vx is a quirk of the Chip-8
+    let shiftedVy = chip8.V[y] shl 1
     let lsb = (chip8.V[x] shr 7) and 0x1
-    chip8.V[x] = chip8.V[x] shl 1
+    chip8.V[x] = shiftedVy
     chip8.V[0xF] = lsb
+
+    # This version would be used on different Chip-8 interpreters
+    # let lsb = (chip8.V[x] shr 7) and 0x1
+    # chip8.V[x] = chip8.V[x] shl 1
+    # chip8.V[0xF] = lsb
 
 # 0x9xy0
 proc instruction_SNE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
