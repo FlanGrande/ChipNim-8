@@ -230,20 +230,26 @@ proc instruction_ADD_I_Vx*(chip8: var Chip8, x: uint8) =
     chip8.I += chip8.V[x]
 
 proc instruction_LD_F_Vx*(chip8: var Chip8, x: uint8) =
-    # Load sprite address into I
-    discard
+    chip8.I = chip8.V[x] * FONTSET_WIDTH
 
 proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
-    # Load BCD into memory
-    discard
+    # Define hundreds, tens, and units variables
+    let hundreds = chip8.V[x] div 100
+    let tens = (chip8.V[x] div 10) mod 10
+    let units = chip8.V[x] mod 10
+
+    # Store hundreds, tens, and units in memory
+    chip8.memory[chip8.I] = hundreds
+    chip8.memory[chip8.I + 1] = tens
+    chip8.memory[chip8.I + 2] = units
 
 proc instruction_LD_I_Vx*(chip8: var Chip8, x: uint8) =
-    # Load V0 to Vx into memory
-    discard
+    for i in uint8(0)..x:
+        chip8.memory[chip8.I + i] = chip8.V[i]
 
 proc instruction_LD_Vx_I*(chip8: var Chip8, x: uint8) =
-    # Load memory into V0 to Vx
-    discard
+    for i in uint8(0)..x:
+        chip8.V[i] = chip8.memory[chip8.I + i]
 
 
 proc loadRom*(chip8: var Chip8, filename: string) =

@@ -10,7 +10,9 @@ const
     PIXEL_HEIGHT* = 10
     OPCODES_PER_FRAME* = 10
     PROGRAM_START* = 0x200
-    FONTSET_START* = 0x050
+    FONTSET_START* = 0x000
+    FONTSET_WIDTH* = 5
+    FONTSET_HEIGHT* = 8
 
 const FONTSET*: array[80, uint8] = [
     0xF0'u8, 0x90, 0x90, 0x90, 0xF0, # 0

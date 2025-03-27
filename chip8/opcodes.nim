@@ -36,8 +36,8 @@ const
     OPCODE_ADD_I_VX* = 0xF01E       # Add Vx to I
     OPCODE_LD_F_VX* = 0xF029        # Load sprite location into I
     OPCODE_LD_BCD_VX* = 0xF033      # Load BCD into memory
-    OPCODE_LD_I_VX* = 0xF055        # Load V0 to Vx into memory
-    OPCODE_LD_VX_I* = 0xF065        # Load memory into V0 to Vx
+    OPCODE_LD_I_VX* = 0xF055        # Write registers V0 through Vx to memory starting at location I. 
+    OPCODE_LD_VX_I* = 0xF065        # Read registers V0 through Vx from memory starting at location I. 
 
 
 # Variable Masks
