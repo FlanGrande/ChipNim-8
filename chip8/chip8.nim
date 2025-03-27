@@ -143,27 +143,30 @@ proc instruction_XOR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
 
 proc instruction_ADD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     let sum = chip8.V[x].uint16 + chip8.V[y].uint16
-    chip8.V[0xF] = if sum > 255: 1 else: 0
     chip8.V[x] = sum.uint8
+    chip8.V[0xF] = if sum > 255: 1 else: 0
+    echo x, " ", chip8.V[x], " ", chip8.V[0xF], " ", sum
 
 # TO DO: Somehow test this works correctly
 proc instruction_SUB_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
-    chip8.V[0xF] = if chip8.V[x] > chip8.V[y]: 1 else: 0
+    let carries = chip8.V[x] >= chip8.V[y]
     chip8.V[x] = (chip8.V[x] - chip8.V[y]).uint8
+    chip8.V[0xF] = if carries: 1 else: 0
 
 proc instruction_SHR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
-    # chip8.V[x] = chip8.V[x] shr 1 # I'm not sure this really needs to go as per Cowgod's description.it might just be some Chip-8 quirk
-    chip8.V[0xF] = chip8.V[x] and 0x01
+    let lsb = chip8.V[x] and 0x1
     chip8.V[x] = chip8.V[x] shr 1
+    chip8.V[0xF] = lsb
 
 proc instruction_SUBN_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
-    chip8.V[0xF] = if chip8.V[y] > chip8.V[x]: 1 else: 0
+    let carries = chip8.V[y] >= chip8.V[x]
     chip8.V[x] = (chip8.V[y] - chip8.V[x]).uint8
+    chip8.V[0xF] = if carries: 1 else: 0
 
 proc instruction_SHL_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
-    chip8.V[0xF] = (chip8.V[x] shr 7) and 0x1
+    let lsb = (chip8.V[x] shr 7) and 0x1
     chip8.V[x] = chip8.V[x] shl 1
-
+    chip8.V[0xF] = lsb
 
 proc instruction_SNE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
     if chip8.V[x] != chip8.V[y]:
