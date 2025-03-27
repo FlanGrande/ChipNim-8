@@ -129,6 +129,40 @@ proc instruction_ADD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
 
 
 # TO DO: 8xy0 - 8xyE
+proc instruction_LD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[x] = chip8.V[y]
+
+proc instruction_OR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[x] = chip8.V[x] or chip8.V[y]
+
+proc instruction_AND_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[x] = chip8.V[x] and chip8.V[y]
+
+proc instruction_XOR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[x] = chip8.V[x] xor chip8.V[y]
+
+proc instruction_ADD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    let sum = chip8.V[x].uint16 + chip8.V[y].uint16
+    chip8.V[0xF] = if sum > 255: 1 else: 0
+    chip8.V[x] = sum.uint8
+
+# TO DO: Somehow test this works correctly
+proc instruction_SUB_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[0xF] = if chip8.V[x] > chip8.V[y]: 1 else: 0
+    chip8.V[x] = (chip8.V[x] - chip8.V[y]).uint8
+
+proc instruction_SHR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    # chip8.V[x] = chip8.V[x] shr 1 # I'm not sure this really needs to go as per Cowgod's description.it might just be some Chip-8 quirk
+    chip8.V[0xF] = chip8.V[x] and 0x01
+    chip8.V[x] = chip8.V[x] shr 1
+
+proc instruction_SUBN_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[0xF] = if chip8.V[y] > chip8.V[x]: 1 else: 0
+    chip8.V[x] = (chip8.V[y] - chip8.V[x]).uint8
+
+proc instruction_SHL_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.V[0xF] = (chip8.V[x] shr 7) and 0x1
+    chip8.V[x] = chip8.V[x] shl 1
 
 
 proc instruction_SNE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
