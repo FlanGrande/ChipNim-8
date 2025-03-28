@@ -10,7 +10,7 @@ const
     SPRITE_HEIGHT* = 15 # This is just the typical maximum height of a sprite, but not necessarily always true. It's usually determined by n in the draw opcode
     PIXEL_WIDTH* = 10
     PIXEL_HEIGHT* = 10
-    OPCODES_PER_FRAME* = 20
+    OPCODES_PER_FRAME* = 8
     PROGRAM_START* = 0x200
     FONTSET_START* = 0x000
     FONTSET_WIDTH* = 5
