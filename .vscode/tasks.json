@@ -7,9 +7,8 @@
             "command": "nim",
             "args": [
                 "compile",
-                "-g",
                 "--debugger:native",
-                "--debuginfo",
+                "--debuginfo:on",
                 "--linedir:on",
                 "--stacktrace:on",
                 "-o:${workspaceFolder}/bin/ChipNim8",
