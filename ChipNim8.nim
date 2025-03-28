@@ -11,7 +11,7 @@ proc main() =
     if not SDL_Init(SDL_INIT_VIDEO):
         quit("SDL_Init Error: " & $SDL_GetError())
 
-    let win = SDL_CreateWindow("Hello SDL3", PIXEL_WIDTH * DISPLAY_WIDTH, PIXEL_HEIGHT * DISPLAY_HEIGHT, 0)
+    let win = SDL_CreateWindow("Chip-8 Emulator", PIXEL_WIDTH * DISPLAY_WIDTH, PIXEL_HEIGHT * DISPLAY_HEIGHT, 0)
     if win == nil:
         quit("SDL_CreateWindow Error: " & $SDL_GetError())
 
@@ -31,11 +31,11 @@ proc main() =
     #loadRom(chip8, "roms/programs/IBM Logo.ch8")
     #loadRom(chip8, "roms/programs/Fishie [Hap, 2005].ch8")
     #loadRom(chip8, "roms/programs/Clock Program [Bill Fisher, 1981].ch8")
-    #loadRom(chip8, "roms/programs/Life [GV Samways, 1980].ch8")
+    loadRom(chip8, "roms/programs/Life [GV Samways, 1980].ch8")
     #loadRom(chip8, "roms/games/Tetris [Fran Dachille, 1991].ch8")
     #loadRom(chip8, "downloadedRoms/3-corax+.ch8")
     #loadRom(chip8, "downloadedRoms/4-flags.ch8")
-    loadRom(chip8, "downloadedRoms/5-quirks.ch8")
+    #loadRom(chip8, "downloadedRoms/5-quirks.ch8")
 
     while running:
         # Process input
@@ -232,24 +232,19 @@ proc main() =
                     else:
                         echo "Unknown opcode: ", toHex(opcode, 4)
                         missingOpcodes.add(opcode)
-
-                if chip8.pc > 0xFFF:
-                    echo "Program finished"
-                    SDL_Delay(5000)
-                    running = false
-                    break
             
             tickTimers(chip8)
     
             let frameTime: uint64 = SDL_GetTicks() - frameStart
             if frameTime < 1000 div 60:
                 SDL_Delay(1000 div 60 - uint32(frameTime))
-        
+
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255)
             SDL_RenderClear(renderer)
             render(renderer, chip8.gfx)
+            requestFrame = false
             SDL_RenderPresent(renderer)
-
+        
         if missingOpcodes.len > 0:
             echo "Missing opcodes: " & missingOpcodes.deduplicate().map(toHex).join(", ")
         
