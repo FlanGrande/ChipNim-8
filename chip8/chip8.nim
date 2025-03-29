@@ -87,8 +87,8 @@ proc tickTimers*(chip8: var Chip8) =
     if chip8.sound_timer > 0:
         dec chip8.sound_timer
 
-proc readMemory*(chip8: var Chip8, address: uint16): uint8 =
-    result = chip8.memory[address]
+proc readMemory*(chip8: var Chip8, address: uint16): uint16 =
+    result = (chip8.memory[address].uint16 shl 8) or chip8.memory[address + 1].uint16
 
 proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
@@ -96,13 +96,12 @@ proc advancePC*(chip8: var Chip8) =
 proc keyDown*(chip8: var Chip8, key: uint8) =
     chip8.key[key] = 1
 
+proc keyUp*(chip8: var Chip8, key: uint8) =
+    chip8.key[key] = 0
+
     if chip8.waitingForKey:
         chip8.V[chip8.waitingRegister] = key
         chip8.waitingForKey = false
-        advancePC(chip8)
-
-proc keyUp*(chip8: var Chip8, key: uint8) =
-    chip8.key[key] = 0
 
 # 0x00E0
 proc instruction_CLS*(chip8: var Chip8) =
