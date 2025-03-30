@@ -27,5 +27,5 @@ proc render*(renderer: SDL_Renderer, gfx: array[DISPLAY_SIZE, uint8]) =
                 h: PIXEL_HEIGHT.float32
             )
             
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE)
+            SDL_SetRenderDrawColor(renderer, 255, 128, 0, SDL_ALPHA_OPAQUE)
             SDL_RenderFillRect(renderer, addr rect)
