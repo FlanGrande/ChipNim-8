@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, std/os, std/streams, std/random
+import globals, std/os, std/streams, std/random, audio
 
 type
     Chip8* = object
@@ -86,6 +86,9 @@ proc tickTimers*(chip8: var Chip8) =
 
     if chip8.sound_timer > 0:
         dec chip8.sound_timer
+        beep()
+    else:
+        unbeep()
 
 proc readMemory*(chip8: var Chip8, address: uint16): uint16 =
     result = (chip8.memory[address].uint16 shl 8) or chip8.memory[address + 1].uint16

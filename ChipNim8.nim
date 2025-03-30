@@ -1,6 +1,7 @@
 import sdl3
 import std/strutils
 import sequtils
+import chip8/audio
 import chip8/chip8
 import chip8/display
 import chip8/globals
@@ -19,7 +20,8 @@ proc main() =
     if renderer == nil:
         quit("SDL_CreateRenderer Error: " & $SDL_GetError())
 
-    
+    initAudioSystem()
+
     # Initialize Chip8
     var chip8: Chip8 = initChip8()
     var running: bool = true
@@ -33,13 +35,13 @@ proc main() =
     # loadRom(chip8, "roms/programs/Clock Program [Bill Fisher, 1981].ch8")
     # loadRom(chip8, "roms/programs/Life [GV Samways, 1980].ch8")
     # loadRom(chip8, "roms/games/Tetris [Fran Dachille, 1991].ch8")
-    loadRom(chip8, "downloadedRoms/1-chip8-logo.ch8")
+    # loadRom(chip8, "downloadedRoms/1-chip8-logo.ch8")
     # loadRom(chip8, "downloadedRoms/2-ibm-logo.ch8")
     # loadRom(chip8, "downloadedRoms/3-corax+.ch8")
     # loadRom(chip8, "downloadedRoms/4-flags.ch8")
     # loadRom(chip8, "downloadedRoms/5-quirks.ch8")
     # loadRom(chip8, "downloadedRoms/6-keypad.ch8")
-    # loadRom(chip8, "downloadedRoms/7-beep.ch8")
+    loadRom(chip8, "downloadedRoms/7-beep.ch8")
 
     while running:
         # Process input
@@ -246,11 +248,12 @@ proc main() =
         render(renderer, chip8.gfx)
         requestFrame = false
         SDL_RenderPresent(renderer)
-        
+
         if missingOpcodes.len > 0:
             echo "Missing opcodes: " & missingOpcodes.deduplicate().map(toHex).join(", ")
-        
+       
     # Cleanup
+    SDL_DestroyAudioStream(audioStream)
     SDL_DestroyRenderer(renderer)
     SDL_DestroyWindow(win)
     SDL_Quit()
