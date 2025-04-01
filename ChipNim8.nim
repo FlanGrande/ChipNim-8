@@ -12,7 +12,7 @@ proc main() =
     if not SDL_Init(SDL_INIT_VIDEO or SDL_INIT_AUDIO):
         quit("SDL_Init Error: " & $SDL_GetError())
 
-    let win = SDL_CreateWindow("Chip-8 Emulator", PIXEL_WIDTH * DISPLAY_WIDTH, PIXEL_HEIGHT * DISPLAY_HEIGHT, 0)
+    let win = SDL_CreateWindow("Chip-8 Emulator", PIXEL_WIDTH * DISPLAY_WIDTH, PIXEL_HEIGHT * DISPLAY_HEIGHT, SDL_WINDOW_BORDERLESS)
     if win == nil:
         quit("SDL_CreateWindow Error: " & $SDL_GetError())
 
@@ -41,7 +41,9 @@ proc main() =
     # loadRom(chip8, "downloadedRoms/4-flags.ch8")
     # loadRom(chip8, "downloadedRoms/5-quirks.ch8")
     # loadRom(chip8, "downloadedRoms/6-keypad.ch8")
-    loadRom(chip8, "downloadedRoms/7-beep.ch8")
+    # loadRom(chip8, "downloadedRoms/7-beep.ch8")
+    # loadRom(chip8, "roms/games/Addition Problems [Paul C. Moews].ch8")
+    loadRom(chip8, "roms/games/Animal Race [Brian Astle].ch8")
 
     while running:
         # Process input
@@ -53,6 +55,8 @@ proc main() =
                 running = false
             elif event.type == SDL_EventKeyDown:
                 case event.key.scancode:
+                    of SDL_SCANCODE_ESCAPE:
+                        running = false
                     of SDLK_SCANCODE_TO_KEYCODE[0]:
                         keyDown(chip8, 0)
                     of SDLK_SCANCODE_TO_KEYCODE[1]:

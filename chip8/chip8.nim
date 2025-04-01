@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, std/os, std/streams, std/random, audio
+import globals, std/os, std/streams, std/random, std/strutils, audio
 
 type
     Chip8* = object
@@ -72,6 +72,7 @@ type
         key: array[16, uint8]         # Hex-based keypad (0x0–0xF)
         waitingForKey*: bool
         waitingRegister: uint8
+        romName*: string
 
 proc initChip8*(): Chip8 =
     result = Chip8()
@@ -337,3 +338,6 @@ proc loadRom*(chip8: var Chip8, filename: string) =
         let dataByte = f.readUint8()
         chip8.memory[PROGRAM_START + i] = dataByte
         inc i
+    
+    # Trim filename so that it has only the name of the file until there's a ( or a [
+    chip8.romName = filename.split("(")[0].split("[")[0]
