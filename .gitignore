@@ -3,3 +3,6 @@ nimblecache/
 htmldocs/
 nimble.develop
 nimble.paths
+# Godot 4+ specific ignores
+.godot/
+/android/
