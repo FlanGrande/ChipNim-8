@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://boe52symcx6jd"]
+
+[sub_resource type="SystemFont" id="SystemFont_ivu2r"]
+font_names = PackedStringArray("Monocraft")
+
+[resource]
+Label/colors/font_color = Color(1, 0.501961, 0, 1)
+Label/fonts/font = SubResource("SystemFont_ivu2r")
