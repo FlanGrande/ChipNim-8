@@ -18,6 +18,30 @@
                 "cwd": "${workspaceFolder}"
             },
             "type": "shell"
+        },
+        {
+            "label": "gdext: build on save",
+            "command": "gdextwiz",
+            "args": [
+                "build"
+            ],
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "runOptions": {
+                "runOn": "onSave"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
