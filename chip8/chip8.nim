@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, std/os, std/streams, std/random, std/strutils, audio
+import globals, std/os, std/streams, std/random, std/strutils, audio, opcodes
 
 type
     Chip8* = object
@@ -73,10 +73,22 @@ type
         waitingForKey*: bool
         waitingRegister: uint8
         romName*: string
+        didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
+
+# Type to store the decoded components of an opcode
+type
+    DecodedOpcode* = object
+        opcode*: uint16               # The full opcode
+        nnn*: uint16                  # A 12-bit value (NNN)
+        x*: uint8                     # A 4-bit register index (X)
+        y*: uint8                     # A 4-bit register index (Y)
+        n*: uint8                     # A 4-bit value (N)
+        kk*: uint8                    # An 8-bit value (KK)
 
 proc initChip8*(): Chip8 =
     result = Chip8()
     result.pc = PROGRAM_START              # Programs start at 0x200
+    result.didDraw = false
 
     for i in 0..<FONTSET.len:
         result.memory[FONTSET_START + i] = FONTSET[i]
@@ -262,6 +274,8 @@ proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8, wrap: boo
             if spritePixel == 1:
                 didDraw = true
 
+    # Update the chip8 didDraw flag
+    chip8.didDraw = didDraw
     return didDraw
 
 # 0xE09E
@@ -341,3 +355,158 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     
     # Trim filename so that it has only the name of the file until there's a ( or a [
     chip8.romName = filename.split("(")[0].split("[")[0]
+
+# New functions for fetch-decode-execute cycle
+
+# Fetch the next opcode
+proc fetchOpcode*(chip8: var Chip8): uint16 =
+    if chip8.waitingForKey:
+        return 0
+    result = readMemory(chip8, chip8.pc)
+    advancePC(chip8)
+
+# Decode the opcode into its components
+proc decodeOpcode*(opcode: uint16): DecodedOpcode =
+    result.opcode = opcode
+    result.nnn = opcode and MASK_NNN
+    result.x = ((opcode and MASK_X) shr 8).uint8
+    result.y = ((opcode and MASK_Y) shr 4).uint8
+    result.n = (opcode and MASK_N).uint8
+    result.kk = (opcode and MASK_KK).uint8
+
+# Execute a decoded opcode
+proc executeOpcode*(chip8: var Chip8, decoded: DecodedOpcode): bool =
+    # Reset the didDraw flag before executing
+    chip8.didDraw = false
+    
+    # Skip execution if waiting for key
+    if chip8.waitingForKey:
+        return false
+    
+    let opcode = decoded.opcode
+    let nnn = decoded.nnn
+    let x = decoded.x
+    let y = decoded.y
+    let n = decoded.n
+    let kk = decoded.kk
+    
+    case opcode and 0xF000:
+        of OPCODE_ZERO:
+            if opcode == OPCODE_CLS:
+                instruction_CLS(chip8)
+            elif opcode == OPCODE_RET:
+                instruction_RET(chip8)
+            else:
+                return false
+        of OPCODE_JP:
+            instruction_JP(chip8, nnn)
+        of OPCODE_CALL:
+            instruction_CALL(chip8, nnn)
+        of OPCODE_SE_VX_KK:
+            instruction_SE_Vx_kk(chip8, x, kk)
+        of OPCODE_SNE_VX_KK:
+            instruction_SNE_Vx_kk(chip8, x, kk)
+        of OPCODE_SE_VX_VY:
+            instruction_SE_Vx_Vy(chip8, x, y)
+        of OPCODE_LD_VX_KK:
+            instruction_LD_Vx_kk(chip8, x, kk)
+        of OPCODE_ADD_VX_KK:
+            instruction_ADD_Vx_kk(chip8, x, kk)
+        of OPCODE_8:
+            case opcode and 0xF00F:
+                of OPCODE_LD_VX_VY:
+                    instruction_LD_Vx_Vy(chip8, x, y)
+                of OPCODE_OR_VX_VY:
+                    instruction_OR_Vx_Vy(chip8, x, y)
+                of OPCODE_AND_VX_VY:
+                    instruction_AND_Vx_Vy(chip8, x, y)
+                of OPCODE_XOR_VX_VY:
+                    instruction_XOR_Vx_Vy(chip8, x, y)
+                of OPCODE_ADD_VX_VY:
+                    instruction_ADD_Vx_Vy(chip8, x, y)
+                of OPCODE_SUB_VX_VY:
+                    instruction_SUB_Vx_Vy(chip8, x, y)
+                of OPCODE_SHR_VX_VY:
+                    instruction_SHR_Vx_Vy(chip8, x, y)
+                of OPCODE_SUBN_VX_VY:
+                    instruction_SUBN_Vx_Vy(chip8, x, y)
+                of OPCODE_SHL_VX_VY:
+                    instruction_SHL_Vx_Vy(chip8, x, y)
+                else:
+                    return false
+        of OPCODE_SNE_VX_VY:
+            instruction_SNE_Vx_Vy(chip8, x, y)
+        of OPCODE_LD_I_NNN:
+            instruction_LD_I_nnn(chip8, nnn)
+        of OPCODE_JP_V0_NNN:
+            instruction_JP_V0_nnn(chip8, nnn)
+        of OPCODE_RND_VX_KK:
+            instruction_RND_Vx_kk(chip8, x, kk)
+        of OPCODE_DRAW:
+            chip8.didDraw = instruction_DRAW(chip8, x, y, n)
+        of OPCODE_E:
+            case opcode and 0xF0FF:
+                of OPCODE_SKP_VX:
+                    instruction_SKP_Vx(chip8, x)
+                of OPCODE_SKNP_VX:
+                    instruction_SKNP_Vx(chip8, x)
+                else:
+                    return false
+        of OPCODE_F:
+            case opcode and 0xF0FF:
+                of OPCODE_LD_VX_DT:
+                    instruction_LD_Vx_DT(chip8, x)
+                of OPCODE_LD_VX_K:
+                    instruction_LD_Vx_K(chip8, x)
+                of OPCODE_LD_DT_VX:
+                    instruction_LD_DT_Vx(chip8, x)
+                of OPCODE_LD_ST_VX:
+                    instruction_LD_ST_Vx(chip8, x)
+                of OPCODE_ADD_I_VX:
+                    instruction_ADD_I_Vx(chip8, x)
+                of OPCODE_LD_F_VX:
+                    instruction_LD_F_Vx(chip8, x)
+                of OPCODE_LD_BCD_VX:
+                    instruction_LD_BCD_Vx(chip8, x)
+                of OPCODE_LD_I_VX:
+                    instruction_LD_I_Vx(chip8, x)
+                of OPCODE_LD_VX_I:
+                    instruction_LD_Vx_I(chip8, x)
+                else:
+                    return false
+        else:
+            return false
+    
+    return true
+
+# Execute a single emulation cycle
+proc emulateCycle*(chip8: var Chip8): bool =
+    # Fetch
+    let opcode = fetchOpcode(chip8)
+    
+    # Decode
+    let decoded = decodeOpcode(opcode)
+    
+    # Execute
+    return executeOpcode(chip8, decoded)
+
+# Emulate a full frame (multiple cycles)
+proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): bool =
+    var didDrawInFrame = false
+    
+    for _ in 0..<cyclesPerFrame:
+        if chip8.waitingForKey:
+            break
+            
+        let cycleResult = emulateCycle(chip8)
+        if not cycleResult:
+            continue
+            
+        # Check if we drew to the screen
+        if chip8.didDraw:
+            didDrawInFrame = true
+    
+    # Update timers at the end of the frame
+    tickTimers(chip8)
+    
+    return didDrawInFrame
