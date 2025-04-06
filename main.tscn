@@ -1,14 +1,14 @@
 [gd_scene load_steps=3 format=3 uid="uid://crxrddki87hpf"]
 
 [ext_resource type="Theme" uid="uid://boe52symcx6jd" path="res://chip8theme.tres" id="1_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8renderer.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8emulator.tscn" id="1_ig7tw"]
 
 [node name="Main" type="Node2D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Renderer")]
-Chip8Renderer = NodePath("../Chip8Renderer")
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator")]
+Chip8Emulator = NodePath("../Chip8Emulator")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -59,4 +59,4 @@ offset_bottom = 23.0
 theme = ExtResource("1_0xm2m")
 text = "Rom Name"
 
-[node name="Chip8Renderer" parent="CanvasLayer" instance=ExtResource("1_ig7tw")]
+[node name="Chip8Emulator" parent="CanvasLayer" instance=ExtResource("1_ig7tw")]
