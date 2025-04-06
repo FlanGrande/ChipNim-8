@@ -13,7 +13,6 @@ proc rom_loaded(self: Chip8Renderer, rom_name: string): Error {.gdsync, signal.}
 method ready(self: Chip8Renderer) {.gdsync.} =
   self.chip8 = initChip8()
   loadRom(self.chip8, "roms/games/Animal Race [Brian Astle].ch8")
-  discard self.connect("rom_loaded", self.callable("_on_rom_loaded"))
   discard self.rom_loaded("Animal Race [Brian Astle]")
 
 method draw(self: Chip8Renderer) {.gdsync.} =
