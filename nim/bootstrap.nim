@@ -1,6 +1,5 @@
 import gdext
 
-# We'll import existing classes here
-# import classes/player
+import classes/chip8renderer
 
 GDExtensionEntryPoint

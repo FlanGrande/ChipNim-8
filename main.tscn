@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://crxrddki87hpf"]
+[gd_scene load_steps=2 format=3 uid="uid://crxrddki87hpf"]
+
+[ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8renderer.tscn" id="1_ig7tw"]
 
 [node name="Main" type="Node2D"]
 
@@ -21,13 +23,4 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0732172, 0.0202217, 6.01634e-09, 1)
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/Control"]
-layout_mode = 1
-offset_right = 640.0
-offset_bottom = 320.0
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="CanvasLayer/Control/SubViewportContainer"]
-handle_input_locally = false
-size = Vector2i(640, 320)
-render_target_update_mode = 4
+[node name="Chip8Renderer" parent="." instance=ExtResource("1_ig7tw")]
