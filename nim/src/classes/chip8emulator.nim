@@ -5,10 +5,11 @@ import chip8/globals
 import gdext/classes/gdNode2D
 
 type Chip8Emulator* {.gdsync.} = ptr object of Node2D
-  chip8: Chip8
+  chip8*: Chip8
 
 # Note: signals must be defined at the top of the file
 proc rom_loaded(self: Chip8Emulator, rom_name: string): Error {.gdsync, signal.}
+proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
 
 method ready(self: Chip8Emulator) {.gdsync.} =
   self.chip8 = initChip8()
@@ -30,6 +31,7 @@ method draw(self: Chip8Emulator) {.gdsync.} =
 
 method process(self: Chip8Emulator, delta: float64) {.gdsync.} =
   discard self.chip8.emulateCycle()
+  discard self.update_debug_ui()
 
   if self.chip8.didDraw:
     queue_redraw(self)

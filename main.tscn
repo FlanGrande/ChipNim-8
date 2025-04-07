@@ -7,8 +7,11 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesVBox")]
 Chip8Emulator = NodePath("../Chip8Emulator")
+RomNameLabel = NodePath("DebugUI/ColumnCenter/VSplitContainer/RomInfo/RomName")
+StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer/StepCountValue")
+OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,37 +29,163 @@ color = Color(0, 0, 0, 1)
 
 [node name="ReferenceRect" type="ReferenceRect" parent="CanvasLayer/UI"]
 layout_mode = 0
-offset_right = 640.0
+offset_left = 512.0
+offset_right = 1152.0
 offset_bottom = 320.0
+border_color = Color(1, 0.533333, 0, 1)
+border_width = 2.0
+editor_only = false
 
-[node name="DebugUI" type="Control" parent="CanvasLayer/UI"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="DebugUI" type="GridContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_0xm2m")
+columns = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
+[node name="ColumnLeft" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 layout_mode = 2
-offset_left = 32.0
-offset_top = 352.0
-offset_right = 32.0
-offset_bottom = 352.0
 
-[node name="RomName" type="Control" parent="CanvasLayer/UI/DebugUI/VBoxContainer"]
+[node name="CPUTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+custom_minimum_size = Vector2(512, 32)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/VBoxContainer/RomName"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -8.5
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "CPU"
+vertical_alignment = 1
+
+[node name="CPUInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel"]
+layout_mode = 2
+
+[node name="CpuContent" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="StepCount" type="Control" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSplitContainer" type="HSplitContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -8.5
+offset_bottom = 23.5
+grow_horizontal = 2
+grow_vertical = 2
+dragging_enabled = false
+dragger_visibility = 1
+
+[node name="StepCountLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Step Count"
+vertical_alignment = 1
+
+[node name="StepCountValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+
+[node name="ColumnCenter" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 8
+dragging_enabled = false
+dragger_visibility = 1
+
+[node name="Spacing" type="ReferenceRect" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+border_width = 0.0
+editor_only = false
+
+[node name="RomInfo" type="Control" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RomLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer/RomInfo"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
-theme = ExtResource("1_0xm2m")
 text = "Rom:"
 
-[node name="Name" type="Label" parent="CanvasLayer/UI/DebugUI/VBoxContainer/RomName"]
+[node name="RomName" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer/RomInfo"]
 layout_mode = 0
 offset_left = 64.0
 offset_right = 150.0
 offset_bottom = 23.0
-theme = ExtResource("1_0xm2m")
 text = "Rom Name"
 
+[node name="ColumnRight" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="OpcodesTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnRight"]
+custom_minimum_size = Vector2(512, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -8.5
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Opcodes"
+vertical_alignment = 1
+
+[node name="OpcodesInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesInfoPanel"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
 [node name="Chip8Emulator" parent="CanvasLayer" instance=ExtResource("1_ig7tw")]
+position = Vector2(512, 0)

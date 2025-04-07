@@ -1,8 +1,28 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://boe52symcx6jd"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://boe52symcx6jd"]
 
 [sub_resource type="SystemFont" id="SystemFont_ivu2r"]
 font_names = PackedStringArray("Monocraft")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ivu2r"]
+bg_color = Color(1, 0.533333, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8sl0j"]
+bg_color = Color(0, 0, 0, 1)
+border_width_bottom = 2
+border_color = Color(1, 0.533333, 0, 1)
+expand_margin_bottom = 38.0
+
 [resource]
 Label/colors/font_color = Color(1, 0.501961, 0, 1)
 Label/fonts/font = SubResource("SystemFont_ivu2r")
+MarginContainer/constants/margin_bottom = 0
+MarginContainer/constants/margin_left = 16
+MarginContainer/constants/margin_right = 0
+MarginContainer/constants/margin_top = 0
+Panel/styles/panel = SubResource("StyleBoxFlat_ivu2r")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_8sl0j")
+VBoxContainer/constants/separation = 0
