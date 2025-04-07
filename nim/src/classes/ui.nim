@@ -25,5 +25,5 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   
   # Append label with the current execution cycel to OpcodesVBox
   let opcodeLabel: Label = Label.instantiate "opcode_label_" & $chip8.step_counter
-  opcodeLabel.text = chip8.current_operation
+  opcodeLabel.text = chip8.current_instruction
   self.OpcodesVBox.add_child(opcodeLabel)

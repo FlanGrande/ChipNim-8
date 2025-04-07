@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, std/os, std/streams, std/random, std/strutils, audio, opcodes
+import globals, strformat, std/os, std/streams, std/random, std/strutils, audio, opcodes
 
 type
     Chip8* = object
@@ -65,7 +65,7 @@ type
         I: uint16                     # Index register
         pc*: uint16                   # Program counter
         step_counter*: uint32
-        current_operation*: string
+        current_instruction*: string
         gfx*: array[DISPLAY_SIZE, uint8]    # Graphics: 64x32 monochrome display
         delay_timer: uint8
         sound_timer: uint8
@@ -124,25 +124,28 @@ proc keyUp*(chip8: var Chip8, key: uint8) =
 # 0x00E0
 proc instruction_CLS*(chip8: var Chip8) =
     chip8.gfx = default(array[DISPLAY_SIZE, uint8])
-    chip8.current_operation = $chip8.pc & " | 00 E0 | CLS"
+    chip8.current_instruction = &"{chip8.pc:04}" & " | 00 E0 | CLS"
 
 # 0x00EE
 proc instruction_RET*(chip8: var Chip8) =
     chip8.pc = chip8.stack[chip8.sp]
     dec chip8.sp
-    chip8.current_operation = $chip8.pc & " | 00 EE | RET"
+    chip8.current_instruction = &"{chip8.pc:04}" & " | 00 EE | RET"
     
 # 0x1nnn
 proc instruction_JP*(chip8: var Chip8, nnn: uint16) =
+    let firstHexPart = chip8.pc.uint16 and 0xFF00
+    let secondHexPart = chip8.pc.uint16 and 0x00FF
+
     chip8.pc = nnn
-    chip8.current_operation = $chip8.pc & " | 1nnn | JP"
+    chip8.current_instruction = &"{chip8.pc:04}" & " | " & toHex(firstHexPart, 2) & " " & toHex(secondHexPart, 2) & " | JP"
 
 # 0x2nnn
 proc instruction_CALL*(chip8: var Chip8, nnn: uint16) =
     inc chip8.sp
     chip8.stack[chip8.sp] = chip8.pc
     chip8.pc = nnn
-    chip8.current_operation = $chip8.pc & " | 2nnn | CALL"
+    chip8.current_instruction = $chip8.pc & " | 2nnn | CALL"
 
 # 0x3xkk
 proc instruction_SE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
