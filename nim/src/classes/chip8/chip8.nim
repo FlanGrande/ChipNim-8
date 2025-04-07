@@ -124,85 +124,100 @@ proc keyUp*(chip8: var Chip8, key: uint8) =
 # 0x00E0
 proc instruction_CLS*(chip8: var Chip8) =
     chip8.gfx = default(array[DISPLAY_SIZE, uint8])
-    chip8.current_instruction = &"{chip8.pc:04}" & " | 00 E0 | CLS"
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 00 E0 | CLS"
 
 # 0x00EE
 proc instruction_RET*(chip8: var Chip8) =
     chip8.pc = chip8.stack[chip8.sp]
     dec chip8.sp
-    chip8.current_instruction = &"{chip8.pc:04}" & " | 00 EE | RET"
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 00 EE | RET"
     
 # 0x1nnn
 proc instruction_JP*(chip8: var Chip8, nnn: uint16) =
-    let firstHexPart = chip8.pc.uint16 and 0xFF00
-    let secondHexPart = chip8.pc.uint16 and 0x00FF
+    let firstByte = (nnn shr 8) and 0xFF
+    let secondByte = nnn and 0xFF
 
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | {firstByte:02X} {secondByte:02X} | JP 0x{nnn:04X}"
     chip8.pc = nnn
-    chip8.current_instruction = &"{chip8.pc:04}" & " | " & toHex(firstHexPart, 2) & " " & toHex(secondHexPart, 2) & " | JP"
 
 # 0x2nnn
 proc instruction_CALL*(chip8: var Chip8, nnn: uint16) =
+    let firstByte = (nnn shr 8) and 0xFF
+    let secondByte = nnn and 0xFF
+    
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | {firstByte:02X} {secondByte:02X} | CALL 0x{nnn:04X}"
     inc chip8.sp
     chip8.stack[chip8.sp] = chip8.pc
     chip8.pc = nnn
-    chip8.current_instruction = $chip8.pc & " | 2nnn | CALL"
 
 # 0x3xkk
 proc instruction_SE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 3{x:01X} {kk:02X} | SE V{x:01X}, {kk}"
     if chip8.V[x] == kk:
         advancePC(chip8)
 
 # 0x4xkk
 proc instruction_SNE_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 4{x:01X} {kk:02X} | SNE V{x:01X}, {kk}"
     if chip8.V[x] != kk:
         advancePC(chip8)
 
 # 0x5xy0
 proc instruction_SE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 5{x:01X} {y:01X}0 | SE V{x:01X}, V{y:01X}"
     if chip8.V[x] == chip8.V[y]:
         advancePC(chip8)
 
 # 0x6xkk
 proc instruction_LD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 6{x:01X} {kk:02X} | LD V{x:01X}, {kk}"
     chip8.V[x] = kk
 
 # 0x7xkk
 proc instruction_ADD_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 7{x:01X} {kk:02X} | ADD V{x:01X}, {kk}"
     chip8.V[x] += kk
 
 # 0x8xy0
 proc instruction_LD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}0 | LD V{x:01X}, V{y:01X}"
     chip8.V[x] = chip8.V[y]
 
 # 0x8xy1
 proc instruction_OR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}1 | OR V{x:01X}, V{y:01X}"
     chip8.V[x] = chip8.V[x] or chip8.V[y]
     chip8.V[0xF] = 0 # Chip-8 quirk
 
 # 0x8xy2
 proc instruction_AND_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}2 | AND V{x:01X}, V{y:01X}"
     chip8.V[x] = chip8.V[x] and chip8.V[y]
     chip8.V[0xF] = 0 # Chip-8 quirk
 
 # 0x8xy3
 proc instruction_XOR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}3 | XOR V{x:01X}, V{y:01X}"
     chip8.V[x] = chip8.V[x] xor chip8.V[y]
     chip8.V[0xF] = 0 # Chip-8 quirk
 
 # 0x8xy4
 proc instruction_ADD_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}4 | ADD V{x:01X}, V{y:01X}"
     let sum = chip8.V[x].uint16 + chip8.V[y].uint16
     chip8.V[x] = sum.uint8
     chip8.V[0xF] = if sum > 255: 1 else: 0
 
 # 0x8xy5
 proc instruction_SUB_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}5 | SUB V{x:01X}, V{y:01X}"
     let carries = chip8.V[x] >= chip8.V[y]
     chip8.V[x] = (chip8.V[x] - chip8.V[y]).uint8
     chip8.V[0xF] = if carries: 1 else: 0
 
 # 0x8xy6
 proc instruction_SHR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}6 | SHR V{x:01X}, V{y:01X}"
     # Storing shifted Vy in Vx is a quirk of the Chip-8
     let shiftedVy = chip8.V[y] shr 1
     let lsb = chip8.V[x] and 0x1
@@ -216,12 +231,14 @@ proc instruction_SHR_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
 
 # 0x8xy7
 proc instruction_SUBN_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}7 | SUBN V{x:01X}, V{y:01X}"
     let carries = chip8.V[y] >= chip8.V[x]
     chip8.V[x] = (chip8.V[y] - chip8.V[x]).uint8
     chip8.V[0xF] = if carries: 1 else: 0
 
 # 0x8xyE
 proc instruction_SHL_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 8{x:01X} {y:01X}E | SHL V{x:01X}, V{y:01X}"
     # Storing shifted Vy in Vx is a quirk of the Chip-8
     let shiftedVy = chip8.V[y] shl 1
     let lsb = (chip8.V[x] shr 7) and 0x1
@@ -235,23 +252,34 @@ proc instruction_SHL_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
 
 # 0x9xy0
 proc instruction_SNE_Vx_Vy*(chip8: var Chip8, x: uint8, y: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | 9{x:01X} {y:01X}0 | SNE V{x:01X}, V{y:01X}"
     if chip8.V[x] != chip8.V[y]:
         advancePC(chip8)
 
 # 0xAnnn
 proc instruction_LD_I_nnn*(chip8: var Chip8, nnn: uint16) =
+    let firstByte = (nnn shr 8) and 0xFF
+    let secondByte = nnn and 0xFF
+    
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | {firstByte:02X} {secondByte:02X} | LD I, 0x{nnn:04X}"
     chip8.I = nnn
 
 # 0xBnnn
 proc instruction_JP_V0_nnn*(chip8: var Chip8, nnn: uint16) =
+    let firstByte = (nnn shr 8) and 0xFF
+    let secondByte = nnn and 0xFF
+    
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | {firstByte:02X} {secondByte:02X} | JP V0, 0x{nnn:04X}"
     chip8.pc = chip8.V[0] or nnn
 
 # 0xCxkk
 proc instruction_RND_Vx_kk*(chip8: var Chip8, x: uint8, kk: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | C{x:01X} {kk:02X} | RND V{x:01X}, {kk}"
     chip8.V[x] = rand(256).uint8 and kk
 
 # 0xDxyn
 proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8, wrap: bool = false): bool =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | D{x:01X} {y:01X}{n:01X} | DRW V{x:01X}, V{y:01X}, {n}"
     let coordX = chip8.V[x] mod DISPLAY_WIDTH
     let coordY = chip8.V[y] mod DISPLAY_HEIGHT
     var didDraw: bool = false
@@ -289,41 +317,50 @@ proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8, wrap: boo
 
 # 0xE09E
 proc instruction_SKP_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | E{x:01X} 9E | SKP V{x:01X}"
     if chip8.key[chip8.V[x]] == 1:
         advancePC(chip8)
 
 # 0xE0A1
 proc instruction_SKNP_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | E{x:01X} A1 | SKNP V{x:01X}"
     if chip8.key[chip8.V[x]] == 0:
         advancePC(chip8)
 
 # 0xFx07
 proc instruction_LD_Vx_DT*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 07 | LD V{x:01X}, DT"
     chip8.V[x] = chip8.delay_timer
 
 # 0xFx0A
 proc instruction_LD_Vx_K*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 0A | LD V{x:01X}, K"
     chip8.waitingForKey = true
     chip8.waitingRegister = x
 
 # 0xFx15
 proc instruction_LD_DT_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 15 | LD DT, V{x:01X}"
     chip8.delay_timer = chip8.V[x]
 
 # 0xFx18
 proc instruction_LD_ST_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 18 | LD ST, V{x:01X}"
     chip8.sound_timer = chip8.V[x]
 
 # 0xFx1E
 proc instruction_ADD_I_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 1E | ADD I, V{x:01X}"
     chip8.I += chip8.V[x]
 
 # 0xFx29
 proc instruction_LD_F_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 29 | LD F, V{x:01X}"
     chip8.I = chip8.V[x] * FONTSET_WIDTH
 
 # 0xFx33
 proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 33 | LD B, V{x:01X}"
     let hundreds = chip8.V[x] div 100
     let tens = (chip8.V[x] div 10) mod 10
     let units = chip8.V[x] mod 10
@@ -334,6 +371,7 @@ proc instruction_LD_BCD_Vx*(chip8: var Chip8, x: uint8) =
 
 # 0xFx55
 proc instruction_LD_I_Vx*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 55 | LD I, V{x:01X}"
     for i in uint8(0)..x:
         chip8.memory[chip8.I + i] = chip8.V[i]
     
@@ -341,6 +379,7 @@ proc instruction_LD_I_Vx*(chip8: var Chip8, x: uint8) =
 
 # 0xFx65
 proc instruction_LD_Vx_I*(chip8: var Chip8, x: uint8) =
+    chip8.current_instruction = &"0x{chip8.pc - 2:03X} | F{x:01X} 65 | LD V{x:01X}, I"
     for i in uint8(0)..x:
         chip8.V[i] = chip8.memory[chip8.I + i]
     
