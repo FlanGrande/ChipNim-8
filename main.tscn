@@ -9,7 +9,7 @@
 
 [node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesVBox")]
 Chip8Emulator = NodePath("../Chip8Emulator")
-RomNameLabel = NodePath("DebugUI/ColumnCenter/VSplitContainer/RomInfo/RomName")
+RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer/StepCountValue")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
 anchors_preset = 15
@@ -28,6 +28,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="ReferenceRect" type="ReferenceRect" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 0
 offset_left = 512.0
 offset_right = 1152.0
@@ -84,7 +85,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HSplitContainer" type="HSplitContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount"]
+[node name="HSplitContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,8 +94,6 @@ offset_top = -8.5
 offset_bottom = 23.5
 grow_horizontal = 2
 grow_vertical = 2
-dragging_enabled = false
-dragger_visibility = 1
 
 [node name="StepCountLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer"]
 layout_mode = 2
@@ -108,39 +107,52 @@ size_flags_horizontal = 3
 text = "0"
 
 [node name="ColumnCenter" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.2
 
-[node name="VSplitContainer" type="VSplitContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter"]
-layout_mode = 2
-size_flags_vertical = 3
-split_offset = 8
-dragging_enabled = false
-dragger_visibility = 1
-
-[node name="Spacing" type="ReferenceRect" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-border_width = 0.0
-editor_only = false
-
-[node name="RomInfo" type="Control" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RomLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer/RomInfo"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="VSplitContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer"]
+layout_mode = 2
+
+[node name="Spacing" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RomInfo" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RomLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Rom:"
 
-[node name="RomName" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/VSplitContainer/RomInfo"]
-layout_mode = 0
-offset_left = 64.0
-offset_right = 150.0
-offset_bottom = 23.0
+[node name="RomName" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Rom Name"
 
 [node name="ColumnRight" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
