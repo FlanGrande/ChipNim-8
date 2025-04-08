@@ -83,12 +83,12 @@ The `{.gdsync.}` pragma can be attached to the following places:
    method ready(self: MyNode) {.gdsync.} = print "Hello, GDExtension! from ready"
    ```
 3. **Signal definition**  
-   See [Signals](#signals)
+   See [Signals](mdc:#signals)
    ```nim
    proc mySignal(self: MyNode): Error {.gdsync, signal.}
    ```
 4. **Virtual method definition**  
-   See [Virtual methods](#virtual-methods)
+   See [Virtual methods](mdc:#virtual-methods)
 
 ---
 
@@ -313,7 +313,7 @@ gdexport "property",
 
 See also:
 
-- [GDScript exported properties](https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_exports.html)
+- [GDScript exported properties](mdc:https:/docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_exports.html)
 
 ---
 
@@ -451,8 +451,8 @@ In GDScript, we could use `preload` or `load` to load a resource. However, the G
 
 To see how to use those, please refer to the official documentation:
 
-- [ResourcePreloader](https://docs.godotengine.org/en/stable/classes/class_resourcepreloader.html)
-- [ResourceLoader](https://docs.godotengine.org/en/stable/classes/class_resourceloader.html)
+- [ResourcePreloader](mdc:https:/docs.godotengine.org/en/stable/classes/class_resourcepreloader.html)
+- [ResourceLoader](mdc:https:/docs.godotengine.org/en/stable/classes/class_resourceloader.html)
 
 ---
 
