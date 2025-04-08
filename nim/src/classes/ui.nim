@@ -2,6 +2,7 @@ import gdext
 import chip8/chip8
 import chip8emulator
 import strutils
+import std/parseutils
 
 import gdext/classes/gdNode
 import gdext/classes/gdControl
@@ -55,23 +56,26 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   if self.OpcodeFollowCheckButton.button_pressed and not self.isUserHoveringOnOpcodesScrollPanelContainer:
     self.OpcodesScrollContainer.scroll_vertical = self.OpcodesVBox.get_child_count() * 200
 
-proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter: uint32) {.gdsync, name: "_on_opcode_label_gui_input".} =
+proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load: uint32) {.gdsync, name: "_on_opcode_label_gui_input".} =
   # Check if left mouse button was just pressed
   if event[].is_class("InputEventMouseButton") and event[].is_action_pressed("left_click"):
-    print("Loading state for step: ", step_counter)
-    if self.Chip8Emulator.chip8.hasState(step_counter):
-      self.Chip8Emulator.chip8.loadState(step_counter)
+    print("Loading state for step: ", step_to_load)
+    if self.Chip8Emulator.chip8.hasState(step_to_load):
+      self.Chip8Emulator.chip8.loadState(step_to_load)
       self.Chip8Emulator.update_display()
       var nodesToRemove: seq[Node] = @[]
+      let currentStepCounter = self.Chip8Emulator.chip8.step_counter
+      let prefixLen = "opcode_label_".len
 
       # Remove all labels under the clicked one, as they are called opcode_label_<step_counter>
-      for i in 0..<self.OpcodesVBox.get_child_count():
+      for i in currentStepCounter.int32..<self.OpcodesVBox.get_child_count():
         let child: Node = self.OpcodesVBox.get_child(i)
-        var childName = child.name
-        var childLabelNumber = childName.split("_")[2]
-        var childStepCounter = toInt(childLabelNumber)
+        var childName = $child.name
+        var childStepCounter: int
 
-        if childStepCounter.uint32 > step_counter:
+        discard parseInt(childName, childStepCounter, prefixLen)
+
+        if childStepCounter.uint32 > step_to_load:
           nodesToRemove.add(child)
       
       # Remove all the nodes in the nodesToRemove sequence
@@ -80,12 +84,12 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter:
         node.queue_free()
       
       # Remove saved states after the current one
-      self.Chip8Emulator.chip8.removeStatesAfter(step_counter)
+      self.Chip8Emulator.chip8.removeStatesAfter(step_to_load)
       
       print("State loaded successfully")
       print("Removed ", nodesToRemove.len, " nodes")
     else:
-      print("No saved state found for step: ", step_counter)
+      print("No saved state found for step: ", step_to_load)
 
 proc on_opcodes_scroll_panel_container_mouse_entered(self: UI) {.gdsync, name: "_on_opcodes_scroll_panel_container_mouse_entered".} =
   self.isUserHoveringOnOpcodesScrollPanelContainer = true
