@@ -6,6 +6,7 @@ import strutils
 import gdext/classes/gdNode
 import gdext/classes/gdControl
 import gdext/classes/gdLabel
+import gdext/classes/gdButton
 import gdext/classes/gdScrollContainer
 import gdext/classes/gdVBoxContainer
 import gdext/classes/gdPanelContainer
@@ -39,9 +40,10 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   self.Chip8Emulator.chip8.saveState(self.Chip8Emulator.chip8.step_counter - 1)
 
   # Append label with the current execution cycle to OpcodesVBox
-  let opcodeLabel: Label = Label.instantiate "opcode_label_" & $(self.Chip8Emulator.chip8.step_counter - 1)
+  let opcodeLabel: Button = Button.instantiate "opcode_label_" & $(self.Chip8Emulator.chip8.step_counter - 1)
   opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
   opcodeLabel.mouse_filter = mouseFilterStop
+  opcodeLabel.alignment = horizontalAlignmentLeft
   
   # Connect the click signal to the label
   discard opcodeLabel.connect("gui_input", self.callable("_on_opcode_label_gui_input").bind(self.Chip8Emulator.chip8.step_counter - 1))
@@ -66,7 +68,6 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter:
         var childName = child.name
         var childLabelNumber = childName.split("_")[2]
         var childStepCounter = toInt(childLabelNumber)
-        print("Child name: ", childName, " Child step counter: ", childStepCounter)
 
         if childStepCounter.uint32 > step_counter:
           nodesToRemove.add(child)
@@ -79,6 +80,7 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter:
       self.Chip8Emulator.chip8.removeStatesAfter(step_counter)
       
       print("State loaded successfully")
+      print("Removed ", nodesToRemove.len, " nodes")
     else:
       print("No saved state found for step: ", step_counter)
 
