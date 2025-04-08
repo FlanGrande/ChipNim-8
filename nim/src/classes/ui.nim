@@ -77,6 +77,7 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter:
       # Remove all the nodes in the nodesToRemove sequence
       for node in nodesToRemove:
         self.OpcodesVBox.remove_child(node)
+        node.queue_free()
       
       # Remove saved states after the current one
       self.Chip8Emulator.chip8.removeStatesAfter(step_counter)
