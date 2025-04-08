@@ -57,7 +57,37 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 ]#
 
 import globals, strformat, std/os, std/streams, std/random, std/strutils, audio, opcodes
-import chip8state
+
+type
+    Chip8State* = object
+        # Memory state
+        memory*: array[MEMORY_SIZE, uint8]
+        
+        # CPU state
+        V*: array[16, uint8]        # 16 general purpose registers V0 to VF
+        I*: uint16                  # Index register
+        pc*: uint16                 # Program counter
+        step_counter*: uint32
+
+        # Graphics state
+        gfx*: array[DISPLAY_SIZE, uint8]  # Graphics: 64x32 monochrome display
+        didDraw*: bool              # Flag to indicate if the screen was drawn during the last frame
+        
+        # Timer state
+        delay_timer*: uint8
+        sound_timer*: uint8
+        
+        # Stack state
+        stack*: array[16, uint16]
+        sp*: uint8                  # Stack pointer
+        
+        # Input state
+        key*: array[16, uint8]      # Hex-based keypad (0x0–0xF)
+        waitingForKey*: bool
+        waitingRegister*: uint8
+        
+        # ROM info
+        romName*: string
 
 type
     Chip8* = object
@@ -77,6 +107,7 @@ type
         waitingRegister: uint8
         romName*: string
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
+        savedStates*: seq[Chip8State]  # Store states as a sequence instead of a table
 
 # Type to store the decoded components of an opcode
 type
@@ -404,6 +435,8 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     
     # Trim filename so that it has only the name of the file until there's a ( or a [
     chip8.romName = filename.split("(")[0].split("[")[0]
+    chip8.step_counter = 0
+    chip8.savedStates = @[] # Initialize as empty sequence
 
 # New functions for fetch-decode-execute cycle
 
@@ -564,9 +597,9 @@ proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): b
 
 # State management functionality
 
-# Creates a Chip8State from the current state of the emulator
-proc saveState*(chip8: var Chip8): Chip8State =
-    result = Chip8State(
+# Creates a Chip8State from the current state of the emulator and adds it to the sequence
+proc saveState*(chip8: var Chip8, stateIndex: uint32) =
+    let newState = Chip8State(
         memory: chip8.memory,
         V: chip8.V,
         I: chip8.I,
@@ -580,11 +613,23 @@ proc saveState*(chip8: var Chip8): Chip8State =
         key: chip8.key,
         waitingForKey: chip8.waitingForKey,
         waitingRegister: chip8.waitingRegister,
-        romName: chip8.romName
+        romName: chip8.romName,
+        step_counter: chip8.step_counter
     )
+    
+    # If stateIndex is beyond the current sequence length, extend the sequence
+    if stateIndex.int >= chip8.savedStates.len:
+        chip8.savedStates.setLen(stateIndex.int + 1)
+    
+    # Set the state at the specified index
+    chip8.savedStates[stateIndex.int] = newState
 
 # Restores the emulator to a previously saved state
-proc loadState*(chip8: var Chip8, state: Chip8State) =
+proc loadState*(chip8: var Chip8, stateIndex: uint32) =
+    if stateIndex.int >= chip8.savedStates.len:
+        return # State doesn't exist
+    
+    let state = chip8.savedStates[stateIndex.int]
     chip8.memory = state.memory
     chip8.V = state.V
     chip8.I = state.I
@@ -599,3 +644,13 @@ proc loadState*(chip8: var Chip8, state: Chip8State) =
     chip8.waitingForKey = state.waitingForKey
     chip8.waitingRegister = state.waitingRegister
     chip8.romName = state.romName
+    chip8.step_counter = state.step_counter
+
+# Check if a state exists at the given index
+proc hasState*(chip8: Chip8, stateIndex: uint32): bool =
+    return stateIndex.int < chip8.savedStates.len and not chip8.savedStates[stateIndex.int].romName.isEmptyOrWhitespace
+
+# Remove states after a given index
+proc removeStatesAfter*(chip8: var Chip8, stateIndex: uint32) =
+    if stateIndex.int + 1 < chip8.savedStates.len:
+        chip8.savedStates.setLen(stateIndex.int + 1)

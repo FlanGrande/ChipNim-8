@@ -36,5 +36,9 @@ method process(self: Chip8Emulator, delta: float64) {.gdsync.} =
   if self.chip8.didDraw:
     queue_redraw(self)
 
+# Method to force update the display after loading a state
+proc update_display*(self: Chip8Emulator) {.gdsync.} =
+  queue_redraw(self)
+
 method input(self: Chip8Emulator, event: InputEvent) {.gdsync.} =
   print("input") 
