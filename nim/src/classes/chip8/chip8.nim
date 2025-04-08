@@ -57,6 +57,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 ]#
 
 import globals, strformat, std/os, std/streams, std/random, std/strutils, audio, opcodes
+import chip8state
 
 type
     Chip8* = object
@@ -560,3 +561,41 @@ proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): b
     tickTimers(chip8)
     
     return didDrawInFrame
+
+# State management functionality
+
+# Creates a Chip8State from the current state of the emulator
+proc saveState*(chip8: var Chip8): Chip8State =
+    result = Chip8State(
+        memory: chip8.memory,
+        V: chip8.V,
+        I: chip8.I,
+        pc: chip8.pc,
+        gfx: chip8.gfx,
+        didDraw: chip8.didDraw,
+        delay_timer: chip8.delay_timer,
+        sound_timer: chip8.sound_timer,
+        stack: chip8.stack,
+        sp: chip8.sp,
+        key: chip8.key,
+        waitingForKey: chip8.waitingForKey,
+        waitingRegister: chip8.waitingRegister,
+        romName: chip8.romName
+    )
+
+# Restores the emulator to a previously saved state
+proc loadState*(chip8: var Chip8, state: Chip8State) =
+    chip8.memory = state.memory
+    chip8.V = state.V
+    chip8.I = state.I
+    chip8.pc = state.pc
+    chip8.gfx = state.gfx
+    chip8.didDraw = state.didDraw
+    chip8.delay_timer = state.delay_timer
+    chip8.sound_timer = state.sound_timer
+    chip8.stack = state.stack
+    chip8.sp = state.sp
+    chip8.key = state.key
+    chip8.waitingForKey = state.waitingForKey
+    chip8.waitingRegister = state.waitingRegister
+    chip8.romName = state.romName
