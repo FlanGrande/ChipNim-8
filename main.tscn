@@ -7,10 +7,12 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesVBox")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer/StepCountValue")
+OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
+OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
 anchors_preset = 15
 anchor_right = 1.0
