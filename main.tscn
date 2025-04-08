@@ -7,13 +7,14 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer/StepCountValue")
 OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
+OpcodeFollowCheckButton = NodePath("DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer/CheckButton")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -93,6 +94,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -8.5
+offset_right = -16.0
 offset_bottom = 23.5
 grow_horizontal = 2
 grow_vertical = 2
@@ -107,6 +109,7 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 text = "0"
+horizontal_alignment = 2
 
 [node name="ColumnCenter" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 custom_minimum_size = Vector2(640, 0)
@@ -175,12 +178,24 @@ offset_top = -8.5
 offset_bottom = 8.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_right = 8
 
-[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Opcodes"
 vertical_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+button_pressed = true
+action_mode = 0
+text = "Follow"
 
 [node name="OpcodesInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight"]
 layout_mode = 2

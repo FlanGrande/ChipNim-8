@@ -12,6 +12,7 @@ import gdext/classes/gdVBoxContainer
 import gdext/classes/gdPanelContainer
 import gdext/classes/gdInputEvent
 import gdext/classes/gdInputEventMouseButton
+import gdext/classes/gdCheckButton
 
 type UI* {.gdsync.} = ptr object of Control
   Chip8Emulator* {.gdexport.}: Chip8Emulator
@@ -20,6 +21,7 @@ type UI* {.gdsync.} = ptr object of Control
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
   OpcodesScrollContainer* {.gdexport.}: ScrollContainer
   OpcodesVBox* {.gdexport.}: VBoxContainer
+  OpcodeFollowCheckButton* {.gdexport.}: CheckButton
   isUserHoveringOnOpcodesScrollPanelContainer: bool
 
 method ready(self: UI) {.gdsync.} =
@@ -42,7 +44,7 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   # Append label with the current execution cycle to OpcodesVBox
   let opcodeLabel: Button = Button.instantiate "opcode_label_" & $(self.Chip8Emulator.chip8.step_counter - 1)
   opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
-  opcodeLabel.mouse_filter = mouseFilterStop
+  opcodeLabel.mouse_filter = mouseFilterPass
   opcodeLabel.alignment = horizontalAlignmentLeft
   
   # Connect the click signal to the label
@@ -50,8 +52,8 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   
   self.OpcodesVBox.add_child(opcodeLabel)
 
-  # if not self.isUserHoveringOnOpcodesScrollPanelContainer:
-  #   self.OpcodesScrollContainer.scroll_vertical = self.OpcodesVBox.get_child_count() * 20
+  if self.OpcodeFollowCheckButton.button_pressed and not self.isUserHoveringOnOpcodesScrollPanelContainer:
+    self.OpcodesScrollContainer.scroll_vertical = self.OpcodesVBox.get_child_count() * 200
 
 proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter: uint32) {.gdsync, name: "_on_opcode_label_gui_input".} =
   # Check if left mouse button was just pressed
@@ -85,11 +87,7 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_counter:
       print("No saved state found for step: ", step_counter)
 
 proc on_opcodes_scroll_panel_container_mouse_entered(self: UI) {.gdsync, name: "_on_opcodes_scroll_panel_container_mouse_entered".} =
-  discard
-  # print("mouse_entered")
-  # self.isUserHoveringOnOpcodesScrollPanelContainer = true
+  self.isUserHoveringOnOpcodesScrollPanelContainer = true
 
 proc on_opcodes_scroll_panel_container_mouse_exited(self: UI) {.gdsync, name: "_on_opcodes_scroll_panel_container_mouse_exited".} =
-  discard
-  # print("mouse_exited")
-  # self.isUserHoveringOnOpcodesScrollPanelContainer = false
+  self.isUserHoveringOnOpcodesScrollPanelContainer = false
