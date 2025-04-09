@@ -6,7 +6,7 @@ import gdext/classes/gdNode2D
 
 type Chip8Emulator* {.gdsync.} = ptr object of Node2D
   chip8*: Chip8
-
+  isPaused*: bool
 # Note: signals must be defined at the top of the file
 proc rom_loaded(self: Chip8Emulator, rom_name: string): Error {.gdsync, signal.}
 proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
@@ -30,11 +30,12 @@ method draw(self: Chip8Emulator) {.gdsync.} =
       draw_rect(self, rect, color(0, 0, 0))
 
 method process(self: Chip8Emulator, delta: float64) {.gdsync.} =
-  discard self.chip8.emulateCycle()
-  discard self.update_debug_ui()
+  if not self.isPaused:
+    discard self.chip8.emulateCycle()
+    discard self.update_debug_ui()
 
-  if self.chip8.didDraw:
-    queue_redraw(self)
+    if self.chip8.didDraw:
+      queue_redraw(self)
 
 # Method to force update the display after loading a state
 proc update_display*(self: Chip8Emulator) {.gdsync.} =
@@ -42,3 +43,6 @@ proc update_display*(self: Chip8Emulator) {.gdsync.} =
 
 # method input(self: Chip8Emulator, event: InputEvent) {.gdsync.} =
 #   print("input")
+
+proc toggle_pause*(self: Chip8Emulator) {.gdsync.} =
+  self.isPaused = not self.isPaused

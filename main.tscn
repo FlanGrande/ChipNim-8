@@ -1,15 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://crxrddki87hpf"]
+[gd_scene load_steps=5 format=3 uid="uid://crxrddki87hpf"]
 
 [ext_resource type="Theme" uid="uid://boe52symcx6jd" path="res://chip8theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8emulator.tscn" id="1_ig7tw"]
+[ext_resource type="Texture2D" uid="uid://dgrhok0dpai3d" path="res://assets/play.webp" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://bqh7al1p2lmwk" path="res://assets/pause.webp" id="3_lquwl"]
 
 [node name="Main" type="Node2D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "PlayPauseButton", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
 Chip8Emulator = NodePath("../Chip8Emulator")
-RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/RomName")
+RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer/StepCountValue")
 V0DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer/V0DecValue")
 V0HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer/V0HexValue")
@@ -43,6 +45,7 @@ VEDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContaine
 VEHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer/VEHexValue")
 VFDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer/VFDecValue")
 VFHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer/VFHexValue")
+PlayPauseButton = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer/PlayPauseButton")
 OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
@@ -670,15 +673,30 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="RomLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RomLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Rom:"
 
-[node name="RomName" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="RomName" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Rom Name"
+
+[node name="ControlsContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="PlayPauseButton" type="CheckButton" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer"]
+layout_mode = 2
+theme_override_icons/checked = ExtResource("2_1bvp3")
+theme_override_icons/unchecked = ExtResource("3_lquwl")
+expand_icon = true
 
 [node name="ColumnRight" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 layout_mode = 2

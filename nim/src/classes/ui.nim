@@ -52,6 +52,8 @@ type UI* {.gdsync.} = ptr object of Control
   VEHexValueLabel* {.gdexport.}: Label
   VFDecValueLabel* {.gdexport.}: Label
   VFHexValueLabel* {.gdexport.}: Label
+
+  PlayPauseButton* {.gdexport.}: CheckButton
   
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
   OpcodesScrollContainer* {.gdexport.}: ScrollContainer
@@ -64,6 +66,7 @@ method ready(self: UI) {.gdsync.} =
   discard self.Chip8Emulator.connect("update_debug_ui", self.callable("_on_chip8_emulator_update"))
   discard self.OpcodesScrollPanelContainer.connect("mouse_entered", self.callable("_on_opcodes_scroll_panel_container_mouse_entered"))
   discard self.OpcodesScrollPanelContainer.connect("mouse_exited", self.callable("_on_opcodes_scroll_panel_container_mouse_exited"))
+  discard self.PlayPauseButton.connect("toggled", self.callable("_on_play_pause_button_toggled"))
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
 
 proc rom_loaded(self: UI, rom_name: string) {.gdsync, name: "_on_rom_loaded".} =
@@ -163,3 +166,6 @@ proc on_opcodes_scroll_panel_container_mouse_entered(self: UI) {.gdsync, name: "
 
 proc on_opcodes_scroll_panel_container_mouse_exited(self: UI) {.gdsync, name: "_on_opcodes_scroll_panel_container_mouse_exited".} =
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
+
+proc on_play_pause_button_toggled(self: UI) {.gdsync, name: "_on_play_pause_button_toggled".} =
+  self.Chip8Emulator.toggle_pause()
