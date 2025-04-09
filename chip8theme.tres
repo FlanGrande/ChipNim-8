@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://boe52symcx6jd"]
+[gd_resource type="Theme" load_steps=15 format=3 uid="uid://boe52symcx6jd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xoh5h"]
 bg_color = Color(1, 0.533333, 0, 1)
@@ -48,6 +48,13 @@ border_width_right = 1
 border_width_bottom = 2
 border_color = Color(1, 0.533333, 0, 1)
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ivu2r"]
+color = Color(1, 0.533333, 0, 1)
+grow_begin = 16.0
+grow_end = 16.0
+thickness = 2
+vertical = true
+
 [resource]
 Button/colors/font_color = Color(1, 0.533333, 0, 1)
 Button/colors/font_focus_color = Color(0, 0, 0, 1)
@@ -76,10 +83,11 @@ GridContainer/constants/v_separation = 0
 Label/colors/font_color = Color(1, 0.501961, 0, 1)
 Label/font_sizes/font_size = 14
 Label/fonts/font = SubResource("SystemFont_ivu2r")
-MarginContainer/constants/margin_bottom = 0
+MarginContainer/constants/margin_bottom = 16
 MarginContainer/constants/margin_left = 16
-MarginContainer/constants/margin_right = 0
-MarginContainer/constants/margin_top = 0
+MarginContainer/constants/margin_right = 16
+MarginContainer/constants/margin_top = 16
 Panel/styles/panel = SubResource("StyleBoxFlat_ivu2r")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_8sl0j")
 VBoxContainer/constants/separation = 0
+VSeparator/styles/separator = SubResource("StyleBoxLine_ivu2r")

@@ -10,7 +10,7 @@
 [node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/RomName")
-StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer/StepCountValue")
+StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer/StepCountValue")
 OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
@@ -81,31 +81,459 @@ layout_mode = 2
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel"]
 layout_mode = 2
 
-[node name="CpuContent" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer"]
+[node name="HSplitContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="StepCount" type="Control" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HSplitContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -8.5
-offset_right = -16.0
-offset_bottom = 23.5
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="StepCountLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer"]
+[node name="StepCountLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Step Count"
 vertical_alignment = 1
 
-[node name="StepCountValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/CpuContent/StepCount/HSplitContainer"]
+[node name="StepCountValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="RegistersTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+custom_minimum_size = Vector2(512, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersTitlePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -8.5
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersTitlePanel/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Registers"
+vertical_alignment = 1
+
+[node name="RegistersInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel"]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="V0VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V0Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V0"
+vertical_alignment = 1
+
+[node name="V0DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V0HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V1VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V1Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V1"
+vertical_alignment = 1
+
+[node name="V1DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+horizontal_alignment = 2
+
+[node name="V1HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+horizontal_alignment = 2
+
+[node name="VSeparator2" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V2VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V2Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V2"
+vertical_alignment = 1
+
+[node name="V2DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V2HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator3" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V3VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V3Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V3"
+vertical_alignment = 1
+
+[node name="V3DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V3HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator4" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V4VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V4Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V4"
+vertical_alignment = 1
+
+[node name="V4DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V4HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator5" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V5VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V5Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V5"
+vertical_alignment = 1
+
+[node name="V5DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V5HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator6" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V6VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V6Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V6"
+vertical_alignment = 1
+
+[node name="V6DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V6HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator7" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V7VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V7Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V7"
+vertical_alignment = 1
+
+[node name="V7DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V7HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator8" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V8VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V8Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V8"
+vertical_alignment = 1
+
+[node name="V8DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V8HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator9" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V9VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="V9Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V9"
+vertical_alignment = 1
+
+[node name="V9DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="V9HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator10" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VAVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VALabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VA"
+vertical_alignment = 1
+
+[node name="VADecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VAHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator11" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VB"
+vertical_alignment = 1
+
+[node name="VBDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VBHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator12" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VCVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VCLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VC"
+vertical_alignment = 1
+
+[node name="VCDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VCHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator13" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VDVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VDLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VD"
+vertical_alignment = 1
+
+[node name="VDDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VDHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator14" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VEVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VELabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VE"
+vertical_alignment = 1
+
+[node name="VEDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VEHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator15" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VFVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VFLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VF"
+vertical_alignment = 1
+
+[node name="VFDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VFHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "0"

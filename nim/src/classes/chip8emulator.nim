@@ -40,5 +40,5 @@ method process(self: Chip8Emulator, delta: float64) {.gdsync.} =
 proc update_display*(self: Chip8Emulator) {.gdsync.} =
   queue_redraw(self)
 
-method input(self: Chip8Emulator, event: InputEvent) {.gdsync.} =
-  print("input") 
+# method input(self: Chip8Emulator, event: InputEvent) {.gdsync.} =
+#   print("input")

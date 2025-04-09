@@ -92,7 +92,7 @@ type
 type
     Chip8* = object
         memory*: array[MEMORY_SIZE, uint8]
-        V: array[16, uint8]           # 16 general purpose registers V0 to VF
+        V*: array[16, uint8]           # 16 general purpose registers V0 to VF
         I: uint16                     # Index register
         pc*: uint16                   # Program counter
         step_counter*: uint32
