@@ -1,7 +1,7 @@
 import gdext
 import chip8/chip8
 import chip8emulator
-import strutils
+import std/strformat
 import std/parseutils
 
 import gdext/classes/gdNode
@@ -19,6 +19,40 @@ type UI* {.gdsync.} = ptr object of Control
   Chip8Emulator* {.gdexport.}: Chip8Emulator
   RomNameLabel* {.gdexport.}: Label
   StepCounter* {.gdexport.}: Label
+
+  V0DecValueLabel* {.gdexport.}: Label
+  V0HexValueLabel* {.gdexport.}: Label
+  V1DecValueLabel* {.gdexport.}: Label
+  V1HexValueLabel* {.gdexport.}: Label
+  V2DecValueLabel* {.gdexport.}: Label
+  V2HexValueLabel* {.gdexport.}: Label
+  V3DecValueLabel* {.gdexport.}: Label
+  V3HexValueLabel* {.gdexport.}: Label
+  V4DecValueLabel* {.gdexport.}: Label
+  V4HexValueLabel* {.gdexport.}: Label
+  V5DecValueLabel* {.gdexport.}: Label
+  V5HexValueLabel* {.gdexport.}: Label
+  V6DecValueLabel* {.gdexport.}: Label
+  V6HexValueLabel* {.gdexport.}: Label
+  V7DecValueLabel* {.gdexport.}: Label
+  V7HexValueLabel* {.gdexport.}: Label
+  V8DecValueLabel* {.gdexport.}: Label
+  V8HexValueLabel* {.gdexport.}: Label
+  V9DecValueLabel* {.gdexport.}: Label
+  V9HexValueLabel* {.gdexport.}: Label
+  VADecValueLabel* {.gdexport.}: Label
+  VAHexValueLabel* {.gdexport.}: Label
+  VBDecValueLabel* {.gdexport.}: Label
+  VBHexValueLabel* {.gdexport.}: Label
+  VCDecValueLabel* {.gdexport.}: Label
+  VCHexValueLabel* {.gdexport.}: Label
+  VDDecValueLabel* {.gdexport.}: Label
+  VDHexValueLabel* {.gdexport.}: Label
+  VEDecValueLabel* {.gdexport.}: Label
+  VEHexValueLabel* {.gdexport.}: Label
+  VFDecValueLabel* {.gdexport.}: Label
+  VFHexValueLabel* {.gdexport.}: Label
+  
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
   OpcodesScrollContainer* {.gdexport.}: ScrollContainer
   OpcodesVBox* {.gdexport.}: VBoxContainer
@@ -38,6 +72,39 @@ proc rom_loaded(self: UI, rom_name: string) {.gdsync, name: "_on_rom_loaded".} =
 
 proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   self.StepCounter.text = $self.Chip8Emulator.chip8.step_counter
+
+  self.V0DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[0]:03}"
+  self.V0HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[0]:02X}"
+  self.V1DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[1]:03}"
+  self.V1HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[1]:02X}"
+  self.V2DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[2]:03}"
+  self.V2HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[2]:02X}"
+  self.V3DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[3]:03}"
+  self.V3HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[3]:02X}"
+  self.V4DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[4]:03}"
+  self.V4HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[4]:02X}"
+  self.V5DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[5]:03}"
+  self.V5HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[5]:02X}"
+  self.V6DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[6]:03}"
+  self.V6HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[6]:02X}"
+  self.V7DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[7]:03}"
+  self.V7HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[7]:02X}"
+  self.V8DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[8]:03}"
+  self.V8HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[8]:02X}"
+  self.V9DecValueLabel.text = &"{self.Chip8Emulator.chip8.V[9]:03}"
+  self.V9HexValueLabel.text = &"{self.Chip8Emulator.chip8.V[9]:02X}"
+  self.VADecValueLabel.text = &"{self.Chip8Emulator.chip8.V[10]:03}"
+  self.VAHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[10]:02X}"
+  self.VBDecValueLabel.text = &"{self.Chip8Emulator.chip8.V[11]:03}"
+  self.VBHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[11]:02X}"
+  self.VCDecValueLabel.text = &"{self.Chip8Emulator.chip8.V[12]:03}"
+  self.VCHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[12]:02X}"
+  self.VDDecValueLabel.text = &"{self.Chip8Emulator.chip8.V[13]:03}"
+  self.VDHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[13]:02X}"
+  self.VEDecValueLabel.text = &"{self.Chip8Emulator.chip8.V[14]:03}"
+  self.VEHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[14]:02X}"
+  self.VFDecValueLabel.text = &"{self.Chip8Emulator.chip8.V[15]:03}"
+  self.VFHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[15]:02X}"
   
   # Create a save state for the current step
   self.Chip8Emulator.chip8.saveState(self.Chip8Emulator.chip8.step_counter - 1)

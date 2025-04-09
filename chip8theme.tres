@@ -90,4 +90,5 @@ MarginContainer/constants/margin_top = 16
 Panel/styles/panel = SubResource("StyleBoxFlat_ivu2r")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_8sl0j")
 VBoxContainer/constants/separation = 0
+VSeparator/constants/separation = 0
 VSeparator/styles/separator = SubResource("StyleBoxLine_ivu2r")

@@ -7,10 +7,42 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer/StepCountValue")
+V0DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer/V0DecValue")
+V0HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer/V0HexValue")
+V1DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer/V1DecValue")
+V1HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer/V1HexValue")
+V2DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer/V2DecValue")
+V2HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer/V2HexValue")
+V3DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer/V3DecValue")
+V3HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer/V3HexValue")
+V4DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer/V4DecValue")
+V4HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer/V4HexValue")
+V5DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer/V5DecValue")
+V5HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer/V5HexValue")
+V6DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer/V6DecValue")
+V6HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer/V6HexValue")
+V7DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer/V7DecValue")
+V7HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer/V7HexValue")
+V8DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer/V8DecValue")
+V8HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer/V8HexValue")
+V9DecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer/V9DecValue")
+V9HexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer/V9HexValue")
+VADecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer/VADecValue")
+VAHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer/VAHexValue")
+VBDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer/VBDecValue")
+VBHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer/VBHexValue")
+VCDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer/VCDecValue")
+VCHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer/VCHexValue")
+VDDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer/VDDecValue")
+VDHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer/VDHexValue")
+VEDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer/VEDecValue")
+VEHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer/VEHexValue")
+VFDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer/VFDecValue")
+VFHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer/VFHexValue")
 OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
@@ -54,7 +86,7 @@ columns = 3
 layout_mode = 2
 
 [node name="CPUTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
-custom_minimum_size = Vector2(512, 32)
+custom_minimum_size = Vector2(744, 32)
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel"]
@@ -127,14 +159,44 @@ layout_mode = 2
 [node name="HSplitContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer"]
 layout_mode = 2
 
+[node name="LegendVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="LegendVLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/LegendVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "V"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LegendVDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/LegendVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Dec"
+horizontal_alignment = 2
+
+[node name="LegendVHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/LegendVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0x"
+horizontal_alignment = 2
+
+[node name="VSeparator16" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="V0VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V0Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V0"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V0DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
@@ -156,11 +218,13 @@ size_flags_horizontal = 3
 [node name="V1VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V1Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V1"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V1DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V1VBoxContainer"]
@@ -182,11 +246,13 @@ size_flags_horizontal = 3
 [node name="V2VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V2Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V2"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V2DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V2VBoxContainer"]
@@ -208,11 +274,13 @@ size_flags_horizontal = 3
 [node name="V3VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V3Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V3"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V3DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V3VBoxContainer"]
@@ -234,11 +302,13 @@ size_flags_horizontal = 3
 [node name="V4VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V4Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V4"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V4DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V4VBoxContainer"]
@@ -260,11 +330,13 @@ size_flags_horizontal = 3
 [node name="V5VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V5Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V5"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V5DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V5VBoxContainer"]
@@ -286,11 +358,13 @@ size_flags_horizontal = 3
 [node name="V6VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V6Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V6"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V6DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V6VBoxContainer"]
@@ -312,11 +386,13 @@ size_flags_horizontal = 3
 [node name="V7VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V7Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V7"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V7DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V7VBoxContainer"]
@@ -338,11 +414,13 @@ size_flags_horizontal = 3
 [node name="V8VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V8Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V8"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V8DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V8VBoxContainer"]
@@ -364,11 +442,13 @@ size_flags_horizontal = 3
 [node name="V9VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="V9Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "V9"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="V9DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V9VBoxContainer"]
@@ -390,11 +470,13 @@ size_flags_horizontal = 3
 [node name="VAVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="VALabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VA"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="VADecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VAVBoxContainer"]
@@ -416,11 +498,13 @@ size_flags_horizontal = 3
 [node name="VBVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="VBLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VB"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="VBDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VBVBoxContainer"]
@@ -442,11 +526,13 @@ size_flags_horizontal = 3
 [node name="VCVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="VCLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VC"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="VCDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VCVBoxContainer"]
@@ -468,11 +554,13 @@ size_flags_horizontal = 3
 [node name="VDVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="VDLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VD"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="VDDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VDVBoxContainer"]
@@ -494,11 +582,13 @@ size_flags_horizontal = 3
 [node name="VEVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="VELabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VE"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="VEDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer"]
@@ -520,11 +610,13 @@ size_flags_horizontal = 3
 [node name="VFVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="VFLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VF"
+horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="VFDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer"]
@@ -593,7 +685,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="OpcodesTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnRight"]
-custom_minimum_size = Vector2(512, 32)
+custom_minimum_size = Vector2(280, 32)
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel"]
@@ -645,4 +737,4 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 
 [node name="Chip8Emulator" parent="CanvasLayer" instance=ExtResource("1_ig7tw")]
-position = Vector2(512, 0)
+position = Vector2(744, 0)
