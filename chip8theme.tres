@@ -1,4 +1,7 @@
-[gd_resource type="Theme" load_steps=15 format=3 uid="uid://boe52symcx6jd"]
+[gd_resource type="Theme" load_steps=16 format=3 uid="uid://boe52symcx6jd"]
+
+[sub_resource type="SystemFont" id="SystemFont_v5i1u"]
+font_names = PackedStringArray("Monocraft")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xoh5h"]
 bg_color = Color(1, 0.533333, 0, 1)
@@ -62,6 +65,8 @@ Button/colors/font_hover_color = Color(0, 0, 0, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 0)
 Button/colors/font_pressed_color = Color(0, 0, 0, 1)
 Button/constants/h_separation = 0
+Button/font_sizes/font_size = 12
+Button/fonts/font = SubResource("SystemFont_v5i1u")
 Button/styles/focus = SubResource("StyleBoxFlat_xoh5h")
 Button/styles/hover = SubResource("StyleBoxFlat_v5i1u")
 Button/styles/normal = SubResource("StyleBoxFlat_t3lyb")

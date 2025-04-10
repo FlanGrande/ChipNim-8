@@ -14,6 +14,7 @@ import gdext/classes/gdPanelContainer
 import gdext/classes/gdInputEvent
 import gdext/classes/gdInputEventMouseButton
 import gdext/classes/gdCheckButton
+import gdext/classes/gdFileDialog
 
 type UI* {.gdsync.} = ptr object of Control
   Chip8Emulator* {.gdexport.}: Chip8Emulator
@@ -71,6 +72,8 @@ type UI* {.gdsync.} = ptr object of Control
   Stack14ValueLabel* {.gdexport.}: Label
   Stack15ValueLabel* {.gdexport.}: Label
 
+  OpenRomButton* {.gdexport.}: Button
+  FileDialog* {.gdexport.}: FileDialog
   PlayPauseButton* {.gdexport.}: CheckButton
   
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
@@ -86,6 +89,8 @@ method ready(self: UI) {.gdsync.} =
   discard self.Chip8Emulator.connect("update_debug_ui", self.callable("_on_chip8_emulator_update"))
   discard self.OpcodesScrollPanelContainer.connect("mouse_entered", self.callable("_on_opcodes_scroll_panel_container_mouse_entered"))
   discard self.OpcodesScrollPanelContainer.connect("mouse_exited", self.callable("_on_opcodes_scroll_panel_container_mouse_exited"))
+  discard self.OpenRomButton.connect("pressed", self.callable("_on_open_rom_button_pressed"))
+  discard self.FileDialog.connect("file_selected", self.callable("_on_file_dialog_file_selected"))
   discard self.PlayPauseButton.connect("toggled", self.callable("_on_play_pause_button_toggled"))
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
   
@@ -115,9 +120,13 @@ proc getStackLabelByIndex(self: UI, index: int): Label =
     of 15: return self.Stack15ValueLabel
     else: return nil
 
-proc rom_loaded(self: UI, rom_name: string) {.gdsync, name: "_on_rom_loaded".} =
-  print("rom_loaded: ", rom_name)
-  self.RomNameLabel.text = rom_name
+proc rom_loaded(self: UI) {.gdsync, name: "_on_rom_loaded".} =
+  # Clean Opcodes window
+  for i in 0..<self.OpcodesVBox.get_child_count():
+    let child = self.OpcodesVBox.get_child(i) as Button
+    child.visible = false
+
+  self.RomNameLabel.text = self.Chip8Emulator.chip8.romName
 
 proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   self.StepCounter.text = $self.Chip8Emulator.chip8.step_counter
@@ -238,6 +247,14 @@ proc on_opcodes_scroll_panel_container_mouse_entered(self: UI) {.gdsync, name: "
 
 proc on_opcodes_scroll_panel_container_mouse_exited(self: UI) {.gdsync, name: "_on_opcodes_scroll_panel_container_mouse_exited".} =
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
+
+proc on_open_rom_button_pressed(self: UI) {.gdsync, name: "_on_open_rom_button_pressed".} =
+  self.Chip8Emulator.toggle_pause()
+  self.FileDialog.popup_centered_ratio()
+
+proc on_file_dialog_file_selected(self: UI, path: string) {.gdsync, name: "_on_file_dialog_file_selected".} =
+  self.Chip8Emulator.openRom(path)
+  self.Chip8Emulator.toggle_pause()
 
 proc on_play_pause_button_toggled(self: UI) {.gdsync, name: "_on_play_pause_button_toggled".} =
   self.Chip8Emulator.toggle_pause()

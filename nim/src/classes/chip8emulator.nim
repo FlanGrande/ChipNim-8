@@ -8,13 +8,13 @@ type Chip8Emulator* {.gdsync.} = ptr object of Node2D
   chip8*: Chip8
   isPaused*: bool
 # Note: signals must be defined at the top of the file
-proc rom_loaded(self: Chip8Emulator, rom_name: string): Error {.gdsync, signal.}
+proc rom_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
+proc openRom*(self: Chip8Emulator, path: string): void
 
 method ready(self: Chip8Emulator) {.gdsync.} =
   self.chip8 = initChip8()
-  loadRom(self.chip8, "roms/games/Animal Race [Brian Astle].ch8")
-  discard self.rom_loaded("Animal Race [Brian Astle]")
+  self.openRom("roms/games/Animal Race [Brian Astle].ch8")
 
 method draw(self: Chip8Emulator) {.gdsync.} =
   for i in 0..<DISPLAY_SIZE:
@@ -46,3 +46,9 @@ proc update_display*(self: Chip8Emulator) {.gdsync.} =
 
 proc toggle_pause*(self: Chip8Emulator) {.gdsync.} =
   self.isPaused = not self.isPaused
+
+proc openRom*(self: Chip8Emulator, path: string) {.gdsync.} =
+  loadRom(self.chip8, path)
+  print("rom loaded: ", self.chip8.romName)
+  discard self.rom_loaded()
+  queue_redraw(self)

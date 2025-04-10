@@ -418,6 +418,9 @@ proc instruction_LD_Vx_I*(chip8: var Chip8, x: uint8) =
     chip8.I += x + 1 # Chip8 quirk
 
 proc loadRom*(chip8: var Chip8, filename: string) =
+    # restart Chip8
+    chip8 = initChip8()
+
     if not fileExists(filename):
         quit("ROM file not found: " & filename)
 
@@ -434,7 +437,9 @@ proc loadRom*(chip8: var Chip8, filename: string) =
         inc i
     
     # Trim filename so that it has only the name of the file until there's a ( or a [
-    chip8.romName = filename.split("(")[0].split("[")[0]
+    var filenameParts = filename.split("/")
+    chip8.romName = filenameParts.pop()
+    chip8.romName = chip8.romName.split("(")[0].split("[")[0].replace(".ch8", "")
     chip8.step_counter = 0
     chip8.savedStates = @[] # Initialize as empty sequence
 
