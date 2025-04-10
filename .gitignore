@@ -7,3 +7,4 @@ nimble.paths
 .godot/
 /android/
 /external/
+*.so
