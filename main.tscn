@@ -9,7 +9,7 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "PlayPauseButton", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "Stack0ValueLabel", "Stack1ValueLabel", "Stack2ValueLabel", "Stack3ValueLabel", "Stack4ValueLabel", "Stack5ValueLabel", "Stack6ValueLabel", "Stack7ValueLabel", "Stack8ValueLabel", "Stack9ValueLabel", "Stack10ValueLabel", "Stack11ValueLabel", "Stack12ValueLabel", "Stack13ValueLabel", "Stack14ValueLabel", "Stack15ValueLabel", "PlayPauseButton", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer/StepCountValue")
@@ -45,6 +45,22 @@ VEDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContaine
 VEHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VEVBoxContainer/VEHexValue")
 VFDecValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer/VFDecValue")
 VFHexValueLabel = NodePath("DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/VFVBoxContainer/VFHexValue")
+Stack0ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack0VBoxContainer/Stack0Value")
+Stack1ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack1VBoxContainer/Stack1Value")
+Stack2ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack2VBoxContainer/Stack2Value")
+Stack3ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack3VBoxContainer/Stack3Value")
+Stack4ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack4VBoxContainer/Stack4Value")
+Stack5ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack5VBoxContainer/Stack5Value")
+Stack6ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack6VBoxContainer/Stack6Value")
+Stack7ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack7VBoxContainer/Stack7Value")
+Stack8ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack8VBoxContainer/Stack8Value")
+Stack9ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack9VBoxContainer/Stack9Value")
+Stack10ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack10VBoxContainer/Stack10Value")
+Stack11ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack11VBoxContainer/Stack11Value")
+Stack12ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack12VBoxContainer/Stack12Value")
+Stack13ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack13VBoxContainer/Stack13Value")
+Stack14ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack14VBoxContainer/Stack14Value")
+Stack15ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack15VBoxContainer/Stack15Value")
 PlayPauseButton = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer/PlayPauseButton")
 OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
@@ -172,12 +188,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "V"
 horizontal_alignment = 2
-vertical_alignment = 1
 
 [node name="LegendVDecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/LegendVBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Dec"
+text = "10"
 horizontal_alignment = 2
 
 [node name="LegendVHexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/LegendVBoxContainer"]
@@ -205,7 +220,7 @@ vertical_alignment = 1
 [node name="V0DecValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "0"
+text = "000"
 horizontal_alignment = 2
 
 [node name="V0HexValue" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/RegistersInfoPanel/MarginContainer/HSplitContainer/V0VBoxContainer"]
@@ -634,6 +649,422 @@ size_flags_horizontal = 3
 text = "0"
 horizontal_alignment = 2
 
+[node name="StackTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+custom_minimum_size = Vector2(512, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackTitlePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -8.5
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackTitlePanel/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Stack"
+vertical_alignment = 1
+
+[node name="StackInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel"]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="LegendStackVBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(19, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LegendStackLabel" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/LegendStackVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SP"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="LegendStackHex" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/LegendStackVBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0x"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack0VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack0Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack0VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack0Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack0VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"
+horizontal_alignment = 2
+
+[node name="VSeparator1" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack1VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack1Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack1VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack1Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack1VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator2" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack2VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack2Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack2VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "2"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack2Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack2VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator3" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack3VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack3Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack3VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "3"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack3Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack3VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator4" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack4VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack4Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack4VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "4"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack4Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack4VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator5" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack5VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack5Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack5VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "5"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack5Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack5VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator6" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack6VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack6Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack6VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "6"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack6Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack6VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator7" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack7VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack7Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack7VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "7"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack7Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack7VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator8" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack8VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack8Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack8VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "8"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack8Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack8VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator9" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack9VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack9Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack9VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "9"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack9Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack9VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator10" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack10VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack10Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack10VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "10"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack10Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack10VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator11" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack11VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack11Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack11VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "11"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack11Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack11VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator12" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack12VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack12Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack12VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "12"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack12Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack12VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator13" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack13VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack13Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack13VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "13"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack13Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack13VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator14" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack14VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack14Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack14VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "14"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack14Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack14VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
+[node name="VSeparator15" type="VSeparator" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stack15VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Stack15Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack15VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "15"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Stack15Value" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/HSplitContainer/Stack15VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0
+"
+horizontal_alignment = 2
+
 [node name="ColumnCenter" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
@@ -691,6 +1122,10 @@ text = "Rom Name"
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
+
+[node name="MenuButton" type="MenuButton" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer"]
+layout_mode = 2
+text = "Open"
 
 [node name="PlayPauseButton" type="CheckButton" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer"]
 layout_mode = 2

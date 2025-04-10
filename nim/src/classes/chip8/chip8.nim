@@ -100,8 +100,8 @@ type
         gfx*: array[DISPLAY_SIZE, uint8]    # Graphics: 64x32 monochrome display
         delay_timer: uint8
         sound_timer: uint8
-        stack: array[16, uint16]
-        sp: uint8                     # Stack pointer
+        stack*: array[16, uint16]
+        sp*: uint8                     # Stack pointer
         key: array[16, uint8]         # Hex-based keypad (0x0–0xF)
         waitingForKey*: bool
         waitingRegister: uint8

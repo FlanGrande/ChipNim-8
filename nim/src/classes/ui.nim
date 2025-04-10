@@ -53,6 +53,24 @@ type UI* {.gdsync.} = ptr object of Control
   VFDecValueLabel* {.gdexport.}: Label
   VFHexValueLabel* {.gdexport.}: Label
 
+  # Stack UI Labels
+  Stack0ValueLabel* {.gdexport.}: Label
+  Stack1ValueLabel* {.gdexport.}: Label
+  Stack2ValueLabel* {.gdexport.}: Label
+  Stack3ValueLabel* {.gdexport.}: Label
+  Stack4ValueLabel* {.gdexport.}: Label
+  Stack5ValueLabel* {.gdexport.}: Label
+  Stack6ValueLabel* {.gdexport.}: Label
+  Stack7ValueLabel* {.gdexport.}: Label
+  Stack8ValueLabel* {.gdexport.}: Label
+  Stack9ValueLabel* {.gdexport.}: Label
+  Stack10ValueLabel* {.gdexport.}: Label
+  Stack11ValueLabel* {.gdexport.}: Label
+  Stack12ValueLabel* {.gdexport.}: Label
+  Stack13ValueLabel* {.gdexport.}: Label
+  Stack14ValueLabel* {.gdexport.}: Label
+  Stack15ValueLabel* {.gdexport.}: Label
+
   PlayPauseButton* {.gdexport.}: CheckButton
   
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
@@ -61,6 +79,8 @@ type UI* {.gdsync.} = ptr object of Control
   OpcodeFollowCheckButton* {.gdexport.}: CheckButton
   isUserHoveringOnOpcodesScrollPanelContainer: bool
 
+proc getStackLabelByIndex(self: UI, index: int): Label
+
 method ready(self: UI) {.gdsync.} =
   discard self.Chip8Emulator.connect("rom_loaded", self.callable("_on_rom_loaded"))
   discard self.Chip8Emulator.connect("update_debug_ui", self.callable("_on_chip8_emulator_update"))
@@ -68,6 +88,32 @@ method ready(self: UI) {.gdsync.} =
   discard self.OpcodesScrollPanelContainer.connect("mouse_exited", self.callable("_on_opcodes_scroll_panel_container_mouse_exited"))
   discard self.PlayPauseButton.connect("toggled", self.callable("_on_play_pause_button_toggled"))
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
+  
+  # Initialize stack labels to invisible
+  for i in 0..<16:
+    let stackLabel = self.getStackLabelByIndex(i)
+    if stackLabel != nil:
+      stackLabel.text = "nil"
+
+proc getStackLabelByIndex(self: UI, index: int): Label =
+  case index:
+    of 0: return self.Stack0ValueLabel
+    of 1: return self.Stack1ValueLabel
+    of 2: return self.Stack2ValueLabel
+    of 3: return self.Stack3ValueLabel
+    of 4: return self.Stack4ValueLabel
+    of 5: return self.Stack5ValueLabel
+    of 6: return self.Stack6ValueLabel
+    of 7: return self.Stack7ValueLabel
+    of 8: return self.Stack8ValueLabel
+    of 9: return self.Stack9ValueLabel
+    of 10: return self.Stack10ValueLabel
+    of 11: return self.Stack11ValueLabel
+    of 12: return self.Stack12ValueLabel
+    of 13: return self.Stack13ValueLabel
+    of 14: return self.Stack14ValueLabel
+    of 15: return self.Stack15ValueLabel
+    else: return nil
 
 proc rom_loaded(self: UI, rom_name: string) {.gdsync, name: "_on_rom_loaded".} =
   print("rom_loaded: ", rom_name)
@@ -108,6 +154,21 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   self.VEHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[14]:02X}"
   self.VFDecValueLabel.text = &"{self.Chip8Emulator.chip8.V[15]:03}"
   self.VFHexValueLabel.text = &"{self.Chip8Emulator.chip8.V[15]:02X}"
+  
+  # Update stack values and visibility based on stack pointer
+  for i in 0..<16:
+    let stackLabel = self.getStackLabelByIndex(i)
+
+    if stackLabel != nil:
+      # Set the value in hexadecimal format
+      stackLabel.text = &"{self.Chip8Emulator.chip8.stack[i]:03X}"
+      
+      # Make stack labels visible up to the stack pointer value
+      let parent = stackLabel.get_parent() as VBoxContainer
+
+      for j in 0..<parent.get_child_count():
+        let child = parent.get_child(j) as Label
+        child.visible = i <= self.Chip8Emulator.chip8.sp.int
   
   # Create a save state for the current step
   self.Chip8Emulator.chip8.saveState(self.Chip8Emulator.chip8.step_counter - 1)
