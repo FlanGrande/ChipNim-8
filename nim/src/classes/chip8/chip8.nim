@@ -82,7 +82,7 @@ type
         sp*: uint8                  # Stack pointer
         
         # Input state
-        key*: array[16, uint8]      # Hex-based keypad (0x0–0xF)
+        key*: set[0..15]           # Hex-based keypad (0x0–0xF) as a set
         waitingForKey*: bool
         waitingRegister*: uint8
         
@@ -102,7 +102,7 @@ type
         sound_timer: uint8
         stack*: array[16, uint16]
         sp*: uint8                     # Stack pointer
-        key: array[16, uint8]         # Hex-based keypad (0x0–0xF)
+        key: set[0..15]               # Hex-based keypad (0x0–0xF) as a set
         waitingForKey*: bool
         waitingRegister: uint8
         romName*: string
@@ -144,10 +144,10 @@ proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
 
 proc keyDown*(chip8: var Chip8, key: uint8) =
-    chip8.key[key] = 1
+    chip8.key.incl(key.int)
 
 proc keyUp*(chip8: var Chip8, key: uint8) =
-    chip8.key[key] = 0
+    chip8.key.excl(key.int)
 
     if chip8.waitingForKey:
         chip8.V[chip8.waitingRegister] = key
@@ -350,13 +350,13 @@ proc instruction_DRAW*(chip8: var Chip8, x: uint8, y: uint8, n: uint8, wrap: boo
 # 0xE09E
 proc instruction_SKP_Vx*(chip8: var Chip8, x: uint8) =
     chip8.current_instruction = &"0x{chip8.pc - 2:03X} | E{x:01X} 9E | SKP V{x:01X}"
-    if chip8.key[chip8.V[x]] == 1:
+    if chip8.V[x].int in chip8.key:
         advancePC(chip8)
 
 # 0xE0A1
 proc instruction_SKNP_Vx*(chip8: var Chip8, x: uint8) =
     chip8.current_instruction = &"0x{chip8.pc - 2:03X} | E{x:01X} A1 | SKNP V{x:01X}"
-    if chip8.key[chip8.V[x]] == 0:
+    if chip8.V[x].int notin chip8.key:
         advancePC(chip8)
 
 # 0xFx07
