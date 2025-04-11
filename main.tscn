@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://crxrddki87hpf"]
+[gd_scene load_steps=10 format=3 uid="uid://crxrddki87hpf"]
 
 [ext_resource type="Theme" uid="uid://boe52symcx6jd" path="res://chip8theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8emulator.tscn" id="1_ig7tw"]
@@ -37,11 +37,14 @@ border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_1bvp3"]
+thickness = 2
+
 [node name="Main" type="Node2D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "Stack0ValueLabel", "Stack1ValueLabel", "Stack2ValueLabel", "Stack3ValueLabel", "Stack4ValueLabel", "Stack5ValueLabel", "Stack6ValueLabel", "Stack7ValueLabel", "Stack8ValueLabel", "Stack9ValueLabel", "Stack10ValueLabel", "Stack11ValueLabel", "Stack12ValueLabel", "Stack13ValueLabel", "Stack14ValueLabel", "Stack15ValueLabel", "OpenRomButton", "FileDialog", "PlayPauseButton", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "Stack0ValueLabel", "Stack1ValueLabel", "Stack2ValueLabel", "Stack3ValueLabel", "Stack4ValueLabel", "Stack5ValueLabel", "Stack6ValueLabel", "Stack7ValueLabel", "Stack8ValueLabel", "Stack9ValueLabel", "Stack10ValueLabel", "Stack11ValueLabel", "Stack12ValueLabel", "Stack13ValueLabel", "Stack14ValueLabel", "Stack15ValueLabel", "OpenRomButton", "FileDialog", "PlayPauseButton", "GameDescriptionLabel", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer/StepCountValue")
@@ -96,6 +99,7 @@ Stack15ValueLabel = NodePath("DebugUI/ColumnLeft/StackInfoPanel/MarginContainer/
 OpenRomButton = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer/OpenROMButton")
 FileDialog = NodePath("FileDialog")
 PlayPauseButton = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer/PlayPauseButton")
+GameDescriptionLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer2/ScrollContainer/GameDescription")
 OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
@@ -1188,6 +1192,34 @@ layout_mode = 2
 theme_override_icons/checked = ExtResource("2_1bvp3")
 theme_override_icons/unchecked = ExtResource("3_lquwl")
 expand_icon = true
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxLine_1bvp3")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GameDescription" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer2/ScrollContainer"]
+custom_minimum_size = Vector2(606, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "This ROM doesn't have a description file."
+autowrap_mode = 3
+
+[node name="HSeparator2" type="HSeparator" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxLine_1bvp3")
 
 [node name="ColumnRight" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 layout_mode = 2

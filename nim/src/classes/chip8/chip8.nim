@@ -106,6 +106,7 @@ type
         waitingForKey*: bool
         waitingRegister: uint8
         romName*: string
+        gameDescription*: string
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
         savedStates*: seq[Chip8State]  # Store states as a sequence instead of a table
 
@@ -499,8 +500,16 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     var filenameParts = filename.split("/")
     chip8.romName = filenameParts.pop()
     chip8.romName = chip8.romName.split("(")[0].split("[")[0].replace(".ch8", "")
+    chip8.gameDescription = "This ROM doesn't have a description file."
     chip8.step_counter = 0
     chip8.savedStates = @[] # Initialize as empty sequence
+
+    let descriptionFile = filename.split(".")[0] & ".txt"
+    if fileExists(descriptionFile):
+        let d = newFileStream(descriptionFile, fmRead)
+        if d != nil:
+            chip8.gameDescription = d.readAll()
+            d.close()
 
 # New functions for fetch-decode-execute cycle
 

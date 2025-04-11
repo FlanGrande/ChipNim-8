@@ -75,6 +75,7 @@ type UI* {.gdsync.} = ptr object of Control
   OpenRomButton* {.gdexport.}: Button
   FileDialog* {.gdexport.}: FileDialog
   PlayPauseButton* {.gdexport.}: CheckButton
+  GameDescriptionLabel* {.gdexport.}: Label
   
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
   OpcodesScrollContainer* {.gdexport.}: ScrollContainer
@@ -128,6 +129,7 @@ proc rom_loaded(self: UI) {.gdsync, name: "_on_rom_loaded".} =
     child.visible = false
 
   self.RomNameLabel.text = self.Chip8Emulator.chip8.romName
+  self.GameDescriptionLabel.text = self.Chip8Emulator.chip8.gameDescription
 
 proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   self.StepCounter.text = $self.Chip8Emulator.chip8.step_counter
