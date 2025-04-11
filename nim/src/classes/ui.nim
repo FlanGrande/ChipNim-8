@@ -91,6 +91,7 @@ method ready(self: UI) {.gdsync.} =
   discard self.OpcodesScrollPanelContainer.connect("mouse_exited", self.callable("_on_opcodes_scroll_panel_container_mouse_exited"))
   discard self.OpenRomButton.connect("pressed", self.callable("_on_open_rom_button_pressed"))
   discard self.FileDialog.connect("file_selected", self.callable("_on_file_dialog_file_selected"))
+  discard self.FileDialog.connect("canceled", self.callable("_on_file_dialog_cancelled"))
   discard self.PlayPauseButton.connect("toggled", self.callable("_on_play_pause_button_toggled"))
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
   
@@ -247,12 +248,21 @@ proc on_opcodes_scroll_panel_container_mouse_exited(self: UI) {.gdsync, name: "_
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
 
 proc on_open_rom_button_pressed(self: UI) {.gdsync, name: "_on_open_rom_button_pressed".} =
-  self.Chip8Emulator.toggle_pause()
+  self.Chip8Emulator.pause()
+  self.PlayPauseButton.set_pressed_no_signal(true)
   self.FileDialog.popup_centered_ratio()
 
 proc on_file_dialog_file_selected(self: UI, path: string) {.gdsync, name: "_on_file_dialog_file_selected".} =
   self.Chip8Emulator.openRom(path)
-  self.Chip8Emulator.toggle_pause()
+  self.Chip8Emulator.resume()
+  self.PlayPauseButton.set_pressed_no_signal(false)
+
+proc on_file_dialog_cancelled(self: UI) {.gdsync, name: "_on_file_dialog_cancelled".} =
+  self.Chip8Emulator.resume()
+  self.PlayPauseButton.set_pressed_no_signal(false)
 
 proc on_play_pause_button_toggled(self: UI) {.gdsync, name: "_on_play_pause_button_toggled".} =
-  self.Chip8Emulator.toggle_pause()
+  if self.PlayPauseButton.button_pressed:
+    self.Chip8Emulator.pause()
+  else:
+    self.Chip8Emulator.resume()

@@ -108,10 +108,12 @@ method input(self: Chip8Emulator, event: GdRef[InputEvent]) {.gdsync.} =
       self.chip8.keyUp(14)
     if event[].is_action_released("F"):
       self.chip8.keyUp(15)
-      
-      
-proc toggle_pause*(self: Chip8Emulator) {.gdsync.} =
-  self.isPaused = not self.isPaused
+
+proc pause*(self: Chip8Emulator) {.gdsync.} =
+  self.isPaused = true
+
+proc resume*(self: Chip8Emulator) {.gdsync.} =
+  self.isPaused = false
 
 proc openRom*(self: Chip8Emulator, path: string) {.gdsync.} =
   loadRom(self.chip8, path)
