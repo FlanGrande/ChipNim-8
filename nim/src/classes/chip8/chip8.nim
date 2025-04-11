@@ -140,6 +140,65 @@ proc tickTimers*(chip8: var Chip8) =
 proc readMemory*(chip8: var Chip8, address: uint16): uint16 =
     result = (chip8.memory[address].uint16 shl 8) or chip8.memory[address + 1].uint16
 
+# State management functionality
+# Creates a Chip8State from the current state of the emulator and adds it to the sequence
+proc saveState*(chip8: var Chip8, stateIndex: uint32) =
+    let newState = Chip8State(
+        memory: chip8.memory,
+        V: chip8.V,
+        I: chip8.I,
+        pc: chip8.pc,
+        gfx: chip8.gfx,
+        didDraw: chip8.didDraw,
+        delay_timer: chip8.delay_timer,
+        sound_timer: chip8.sound_timer,
+        stack: chip8.stack,
+        sp: chip8.sp,
+        key: chip8.key,
+        waitingForKey: chip8.waitingForKey,
+        waitingRegister: chip8.waitingRegister,
+        romName: chip8.romName,
+        step_counter: chip8.step_counter
+    )
+    
+    # If stateIndex is beyond the current sequence length, extend the sequence
+    if stateIndex.int >= chip8.savedStates.len:
+        chip8.savedStates.setLen(stateIndex.int + 1)
+    
+    # Set the state at the specified index
+    chip8.savedStates[stateIndex.int] = newState
+
+# Restores the emulator to a previously saved state
+proc loadState*(chip8: var Chip8, stateIndex: uint32) =
+    if stateIndex.int >= chip8.savedStates.len:
+        return # State doesn't exist
+    
+    let state = chip8.savedStates[stateIndex.int]
+    chip8.memory = state.memory
+    chip8.V = state.V
+    chip8.I = state.I
+    chip8.pc = state.pc
+    chip8.gfx = state.gfx
+    chip8.didDraw = state.didDraw
+    chip8.delay_timer = state.delay_timer
+    chip8.sound_timer = state.sound_timer
+    chip8.stack = state.stack
+    chip8.sp = state.sp
+    chip8.key = state.key
+    chip8.waitingForKey = state.waitingForKey
+    chip8.waitingRegister = state.waitingRegister
+    chip8.romName = state.romName
+    chip8.step_counter = state.step_counter
+
+# Check if a state exists at the given index
+proc hasState*(chip8: Chip8, stateIndex: uint32): bool =
+    return stateIndex.int < chip8.savedStates.len and not chip8.savedStates[stateIndex.int].romName.isEmptyOrWhitespace
+
+# Remove states after a given index
+proc removeStatesAfter*(chip8: var Chip8, stateIndex: uint32) =
+    if stateIndex.int + 1 < chip8.savedStates.len:
+        chip8.savedStates.setLen(stateIndex.int + 1)
+
 proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
 
@@ -566,6 +625,9 @@ proc executeOpcode*(chip8: var Chip8, decoded: DecodedOpcode): bool =
     
     chip8.step_counter += 1
 
+    # Save the state of the emulator
+    chip8.saveState(chip8.step_counter - 1)
+
     return true
 
 # Execute a single emulation cycle
@@ -599,63 +661,3 @@ proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): b
     tickTimers(chip8)
     
     return didDrawInFrame
-
-# State management functionality
-
-# Creates a Chip8State from the current state of the emulator and adds it to the sequence
-proc saveState*(chip8: var Chip8, stateIndex: uint32) =
-    let newState = Chip8State(
-        memory: chip8.memory,
-        V: chip8.V,
-        I: chip8.I,
-        pc: chip8.pc,
-        gfx: chip8.gfx,
-        didDraw: chip8.didDraw,
-        delay_timer: chip8.delay_timer,
-        sound_timer: chip8.sound_timer,
-        stack: chip8.stack,
-        sp: chip8.sp,
-        key: chip8.key,
-        waitingForKey: chip8.waitingForKey,
-        waitingRegister: chip8.waitingRegister,
-        romName: chip8.romName,
-        step_counter: chip8.step_counter
-    )
-    
-    # If stateIndex is beyond the current sequence length, extend the sequence
-    if stateIndex.int >= chip8.savedStates.len:
-        chip8.savedStates.setLen(stateIndex.int + 1)
-    
-    # Set the state at the specified index
-    chip8.savedStates[stateIndex.int] = newState
-
-# Restores the emulator to a previously saved state
-proc loadState*(chip8: var Chip8, stateIndex: uint32) =
-    if stateIndex.int >= chip8.savedStates.len:
-        return # State doesn't exist
-    
-    let state = chip8.savedStates[stateIndex.int]
-    chip8.memory = state.memory
-    chip8.V = state.V
-    chip8.I = state.I
-    chip8.pc = state.pc
-    chip8.gfx = state.gfx
-    chip8.didDraw = state.didDraw
-    chip8.delay_timer = state.delay_timer
-    chip8.sound_timer = state.sound_timer
-    chip8.stack = state.stack
-    chip8.sp = state.sp
-    chip8.key = state.key
-    chip8.waitingForKey = state.waitingForKey
-    chip8.waitingRegister = state.waitingRegister
-    chip8.romName = state.romName
-    chip8.step_counter = state.step_counter
-
-# Check if a state exists at the given index
-proc hasState*(chip8: Chip8, stateIndex: uint32): bool =
-    return stateIndex.int < chip8.savedStates.len and not chip8.savedStates[stateIndex.int].romName.isEmptyOrWhitespace
-
-# Remove states after a given index
-proc removeStatesAfter*(chip8: var Chip8, stateIndex: uint32) =
-    if stateIndex.int + 1 < chip8.savedStates.len:
-        chip8.savedStates.setLen(stateIndex.int + 1)

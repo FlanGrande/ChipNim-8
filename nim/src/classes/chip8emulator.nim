@@ -3,6 +3,8 @@ import chip8/chip8
 import chip8/globals
 
 import gdext/classes/gdNode2D
+import gdext/classes/gdInputEvent
+import gdext/classes/gdInputEventKey
 
 type Chip8Emulator* {.gdsync.} = ptr object of Node2D
   chip8*: Chip8
@@ -11,6 +13,7 @@ type Chip8Emulator* {.gdsync.} = ptr object of Node2D
 proc rom_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
 proc openRom*(self: Chip8Emulator, path: string): void
+proc emulateFrame*(self: Chip8Emulator): bool {.gdsync.}
 
 method ready(self: Chip8Emulator) {.gdsync.} =
   self.chip8 = initChip8()
@@ -31,19 +34,82 @@ method draw(self: Chip8Emulator) {.gdsync.} =
 
 method process(self: Chip8Emulator, delta: float64) {.gdsync.} =
   if not self.isPaused:
-    discard self.chip8.emulateCycle()
-    discard self.update_debug_ui()
+    discard self.emulateFrame()
 
-    if self.chip8.didDraw:
-      queue_redraw(self)
 
 # Method to force update the display after loading a state
 proc update_display*(self: Chip8Emulator) {.gdsync.} =
   queue_redraw(self)
 
-# method input(self: Chip8Emulator, event: InputEvent) {.gdsync.} =
-#   print("input")
-
+method input(self: Chip8Emulator, event: GdRef[InputEvent]) {.gdsync.} =
+  if event[].is_class("InputEventKey"):
+    if event[].is_action_pressed("1"):
+      self.chip8.keyDown(1)
+    if event[].is_action_pressed("2"):
+      self.chip8.keyDown(2)
+    if event[].is_action_pressed("3"):
+      self.chip8.keyDown(3)
+    if event[].is_action_pressed("4"):
+      self.chip8.keyDown(4)
+    if event[].is_action_pressed("5"):
+      self.chip8.keyDown(5)
+    if event[].is_action_pressed("6"):
+      self.chip8.keyDown(6)
+    if event[].is_action_pressed("7"):
+      self.chip8.keyDown(7)
+    if event[].is_action_pressed("8"):
+      self.chip8.keyDown(8)
+    if event[].is_action_pressed("9"):
+      self.chip8.keyDown(9)
+    if event[].is_action_pressed("0"):
+      self.chip8.keyDown(0)
+    if event[].is_action_pressed("A"):
+      self.chip8.keyDown(10)
+    if event[].is_action_pressed("B"):
+      self.chip8.keyDown(11)
+    if event[].is_action_pressed("C"):
+      self.chip8.keyDown(12)
+    if event[].is_action_pressed("D"):
+      self.chip8.keyDown(13)
+    if event[].is_action_pressed("E"):
+      self.chip8.keyDown(14)
+    if event[].is_action_pressed("F"):
+      self.chip8.keyDown(15)
+    
+    if event[].is_action_released("1"):
+      self.chip8.keyUp(1)
+    if event[].is_action_released("2"):
+      self.chip8.keyUp(2)
+    if event[].is_action_released("3"):
+      self.chip8.keyUp(3)
+    if event[].is_action_released("4"):
+      self.chip8.keyUp(4)
+    if event[].is_action_released("5"):
+      self.chip8.keyUp(5)
+    if event[].is_action_released("6"):
+      self.chip8.keyUp(6)
+    if event[].is_action_released("7"):
+      self.chip8.keyUp(7)
+    if event[].is_action_released("8"):
+      self.chip8.keyUp(8)
+    if event[].is_action_released("9"):
+      self.chip8.keyUp(9)
+    if event[].is_action_released("0"):
+      self.chip8.keyUp(0)
+    if event[].is_action_released("A"):
+      self.chip8.keyUp(10)
+    if event[].is_action_released("B"):
+      self.chip8.keyUp(11)
+    if event[].is_action_released("C"):
+      self.chip8.keyUp(12)
+    if event[].is_action_released("D"):
+      self.chip8.keyUp(13)
+    if event[].is_action_released("E"):
+      self.chip8.keyUp(14)
+    if event[].is_action_released("F"):
+      self.chip8.keyUp(15)
+      
+      
 proc toggle_pause*(self: Chip8Emulator) {.gdsync.} =
   self.isPaused = not self.isPaused
 
@@ -52,3 +118,26 @@ proc openRom*(self: Chip8Emulator, path: string) {.gdsync.} =
   print("rom loaded: ", self.chip8.romName)
   discard self.rom_loaded()
   queue_redraw(self)
+
+# Emulate a full frame (multiple cycles)
+proc emulateFrame*(self: Chip8Emulator): bool =
+    var didDrawInFrame = false
+    
+    for _ in 0..<8: # TODO: Hardcoded to 8 for now
+        if self.chip8.waitingForKey:
+            break
+            
+        let cycleResult = emulateCycle(self.chip8)
+        discard self.update_debug_ui()
+        queue_redraw(self)
+        if not cycleResult:
+            continue
+            
+        # Check if we drew to the screen
+        if self.chip8.didDraw:
+            didDrawInFrame = true
+    
+    # Update timers at the end of the frame
+    self.chip8.tickTimers()
+    
+    return didDrawInFrame
