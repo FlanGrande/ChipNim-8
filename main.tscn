@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://crxrddki87hpf"]
+[gd_scene load_steps=11 format=3 uid="uid://crxrddki87hpf"]
 
 [ext_resource type="Theme" uid="uid://boe52symcx6jd" path="res://chip8theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8emulator.tscn" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://dgrhok0dpai3d" path="res://assets/play.webp" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://fdqwowuhkvvo" path="res://assets/FlanLogoPixelArt.png" id="2_lquwl"]
 [ext_resource type="Texture2D" uid="uid://bqh7al1p2lmwk" path="res://assets/pause.webp" id="3_lquwl"]
 
 [sub_resource type="SystemFont" id="SystemFont_1bvp3"]
@@ -177,7 +178,7 @@ text = "CPU"
 vertical_alignment = 1
 
 [node name="CPUInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
-custom_minimum_size = Vector2(0, 32)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUInfoPanel"]
@@ -1116,6 +1117,15 @@ text = "0
 "
 horizontal_alignment = 2
 
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_lquwl")
+expand_mode = 3
+
 [node name="ColumnCenter" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
@@ -1166,16 +1176,44 @@ text = "Rom:"
 
 [node name="RomName" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Rom Name"
+text_overrun_behavior = 3
 
 [node name="ControlsContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
+[node name="SaveStateButton" type="Button" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_pressed_color = Color(1, 0.533333, 0, 1)
+theme_override_fonts/font = SubResource("SystemFont_1bvp3")
+theme_override_styles/focus = SubResource("StyleBoxFlat_lquwl")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_1bvp3")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7mycd")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1bvp3")
+action_mode = 0
+text = "Save"
+
+[node name="LoadStateButton" type="Button" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_pressed_color = Color(1, 0.533333, 0, 1)
+theme_override_fonts/font = SubResource("SystemFont_1bvp3")
+theme_override_styles/focus = SubResource("StyleBoxFlat_lquwl")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_1bvp3")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7mycd")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1bvp3")
+action_mode = 0
+text = "Load"
+
 [node name="OpenROMButton" type="Button" parent="CanvasLayer/UI/DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/ControlsContainer"]
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_pressed_color = Color(1, 0.533333, 0, 1)
