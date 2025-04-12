@@ -3,6 +3,7 @@ import chip8/chip8
 import chip8emulator
 import std/strformat
 import std/parseutils
+import std/strutils
 
 import gdext/classes/gdNode
 import gdext/classes/gdControl
@@ -15,6 +16,7 @@ import gdext/classes/gdInputEvent
 import gdext/classes/gdInputEventMouseButton
 import gdext/classes/gdCheckButton
 import gdext/classes/gdFileDialog
+import gdext/classes/gdFont
 
 type UI* {.gdsync.} = ptr object of Control
   Chip8Emulator* {.gdexport.}: Chip8Emulator
@@ -85,7 +87,12 @@ type UI* {.gdsync.} = ptr object of Control
   OpcodeFollowCheckButton* {.gdexport.}: CheckButton
   isUserHoveringOnOpcodesScrollPanelContainer: bool
 
+  # Memory view panel
+  MemoryVBox* {.gdexport.}: VBoxContainer
+
 proc getStackLabelByIndex(self: UI, index: int): Label
+proc initMemoryDisplay(self: UI)
+proc updateMemoryDisplay(self: UI)
 
 method ready(self: UI) {.gdsync.} =
   discard self.Chip8Emulator.connect("rom_loaded", self.callable("_on_rom_loaded"))
@@ -107,6 +114,9 @@ method ready(self: UI) {.gdsync.} =
     let stackLabel = self.getStackLabelByIndex(i)
     if stackLabel != nil:
       stackLabel.text = "nil"
+      
+  # Initialize memory display
+  self.initMemoryDisplay()
 
 proc getStackLabelByIndex(self: UI, index: int): Label =
   case index:
@@ -136,6 +146,9 @@ proc rom_loaded(self: UI) {.gdsync, name: "_on_rom_loaded".} =
 
   self.RomNameLabel.text = self.Chip8Emulator.chip8.romName
   self.GameDescriptionLabel.text = self.Chip8Emulator.chip8.gameDescription
+  
+  # Update memory display after loading a ROM
+  self.updateMemoryDisplay()
 
 proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   self.StepCounter.text = $self.Chip8Emulator.chip8.step_counter
@@ -215,6 +228,9 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   if self.OpcodeFollowCheckButton.button_pressed and not self.isUserHoveringOnOpcodesScrollPanelContainer:
     self.OpcodesScrollContainer.scroll_vertical = self.OpcodesVBox.get_child_count() * 200
 
+  # Update memory display with each UI update
+  self.updateMemoryDisplay()
+
 proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load: uint32) {.gdsync, name: "_on_opcode_label_gui_input".} =
   # Check if left mouse button was just pressed
   if event[].is_class("InputEventMouseButton") and event[].is_action_pressed("left_click"):
@@ -286,5 +302,59 @@ proc on_special_state_saved(self: UI) {.gdsync, name: "_on_special_state_saved".
   discard
 
 proc on_special_state_loaded(self: UI) {.gdsync, name: "_on_special_state_loaded".} =
-  # You can add visual feedback here if needed
-  discard
+  # Update memory display after loading a state
+  self.updateMemoryDisplay()
+
+# Memory display functions
+proc isDisplayableAscii(byte: uint8): bool =
+  return byte >= 0x20 and byte <= 0x7E
+
+proc getAsciiChar(byte: uint8): string =
+  if isDisplayableAscii(byte):
+    return $byte.char
+  else:
+    return "."
+
+proc initMemoryDisplay(self: UI) =
+  # Remove any existing memory labels
+  for i in 0..<self.MemoryVBox.get_child_count():
+    self.MemoryVBox.get_child(i).queue_free()
+  
+  # Create a label for each row of memory (16 bytes per row)
+  for row in 0..<(0x1000 div 16):
+    let label = Label.instantiate("memory_row_" & $row)
+    label.text = ""
+    
+    # Using a monospace font without loading external resources
+    label.horizontal_alignment = horizontalAlignmentLeft
+    # We're not setting a custom font here as it might not be available
+    # The theme already provides a monospace font for us
+    
+    self.MemoryVBox.add_child(label)
+  
+  # Initial update of the memory display
+  self.updateMemoryDisplay()
+
+proc updateMemoryDisplay(self: UI) =
+  if self.MemoryVBox == nil or self.Chip8Emulator == nil:
+    return
+  
+  # Process each row (16 bytes per row)
+  for row in 0..<(0x1000 div 16):
+    let address = row * 16
+    let rowLabel = self.MemoryVBox.get_node("memory_row_" & $row) as Label
+    
+    if rowLabel == nil:
+      continue
+    
+    var hexPart = ""
+    var asciiPart = ""
+    
+    # Build the hex and ASCII parts
+    for offset in 0..<16:
+      let byte = self.Chip8Emulator.chip8.memory[address + offset]
+      hexPart &= " " & $byte.toHex(2)
+      asciiPart &= getAsciiChar(byte)
+    
+    # Format the complete row
+    rowLabel.text = "0x" & address.toHex(3) & hexPart & " " & asciiPart

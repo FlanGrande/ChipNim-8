@@ -45,7 +45,7 @@ thickness = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "Stack0ValueLabel", "Stack1ValueLabel", "Stack2ValueLabel", "Stack3ValueLabel", "Stack4ValueLabel", "Stack5ValueLabel", "Stack6ValueLabel", "Stack7ValueLabel", "Stack8ValueLabel", "Stack9ValueLabel", "Stack10ValueLabel", "Stack11ValueLabel", "Stack12ValueLabel", "Stack13ValueLabel", "Stack14ValueLabel", "Stack15ValueLabel", "OpenRomButton", "FileDialog", "PlayPauseButton", "SaveSpecialStateButton", "LoadSpecialStateButton", "GameDescriptionLabel", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton")]
+[node name="UI" type="UI" parent="CanvasLayer" node_paths=PackedStringArray("Chip8Emulator", "RomNameLabel", "StepCounter", "V0DecValueLabel", "V0HexValueLabel", "V1DecValueLabel", "V1HexValueLabel", "V2DecValueLabel", "V2HexValueLabel", "V3DecValueLabel", "V3HexValueLabel", "V4DecValueLabel", "V4HexValueLabel", "V5DecValueLabel", "V5HexValueLabel", "V6DecValueLabel", "V6HexValueLabel", "V7DecValueLabel", "V7HexValueLabel", "V8DecValueLabel", "V8HexValueLabel", "V9DecValueLabel", "V9HexValueLabel", "VADecValueLabel", "VAHexValueLabel", "VBDecValueLabel", "VBHexValueLabel", "VCDecValueLabel", "VCHexValueLabel", "VDDecValueLabel", "VDHexValueLabel", "VEDecValueLabel", "VEHexValueLabel", "VFDecValueLabel", "VFHexValueLabel", "Stack0ValueLabel", "Stack1ValueLabel", "Stack2ValueLabel", "Stack3ValueLabel", "Stack4ValueLabel", "Stack5ValueLabel", "Stack6ValueLabel", "Stack7ValueLabel", "Stack8ValueLabel", "Stack9ValueLabel", "Stack10ValueLabel", "Stack11ValueLabel", "Stack12ValueLabel", "Stack13ValueLabel", "Stack14ValueLabel", "Stack15ValueLabel", "OpenRomButton", "FileDialog", "PlayPauseButton", "SaveSpecialStateButton", "LoadSpecialStateButton", "GameDescriptionLabel", "OpcodesScrollPanelContainer", "OpcodesScrollContainer", "OpcodesVBox", "OpcodeFollowCheckButton", "MemoryVBox")]
 Chip8Emulator = NodePath("../Chip8Emulator")
 RomNameLabel = NodePath("DebugUI/ColumnCenter/PanelContainer/VSplitContainer/RomInfo/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/RomName")
 StepCounter = NodePath("DebugUI/ColumnLeft/CPUInfoPanel/MarginContainer/HSplitContainer/StepCountValue")
@@ -107,6 +107,7 @@ OpcodesScrollPanelContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel")
 OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer")
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
 OpcodeFollowCheckButton = NodePath("DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer/CheckButton")
+MemoryVBox = NodePath("DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1125,6 +1126,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer"]
+visible = false
 layout_mode = 2
 texture = ExtResource("2_lquwl")
 expand_mode = 2
