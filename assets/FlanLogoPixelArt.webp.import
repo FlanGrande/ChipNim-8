@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fdqwowuhkvvo"
-path="res://.godot/imported/FlanLogoPixelArt.png-3e250af9b70dc1f91bef17c81808c444.ctex"
+uid="uid://bq58vgit8i6fu"
+path="res://.godot/imported/FlanLogoPixelArt.webp-f7823c5e3ffbd1282f1b9d46c7553c75.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/FlanLogoPixelArt.png"
-dest_files=["res://.godot/imported/FlanLogoPixelArt.png-3e250af9b70dc1f91bef17c81808c444.ctex"]
+source_file="res://assets/FlanLogoPixelArt.webp"
+dest_files=["res://.godot/imported/FlanLogoPixelArt.webp-f7823c5e3ffbd1282f1b9d46c7553c75.ctex"]
 
 [params]
 

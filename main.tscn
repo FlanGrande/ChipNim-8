@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://crxrddki87hpf"]
+[gd_scene load_steps=12 format=3 uid="uid://crxrddki87hpf"]
 
 [ext_resource type="Theme" uid="uid://boe52symcx6jd" path="res://chip8theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8emulator.tscn" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://dgrhok0dpai3d" path="res://assets/play.webp" id="2_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://fdqwowuhkvvo" path="res://assets/FlanLogoPixelArt.png" id="2_lquwl"]
+[ext_resource type="Texture2D" uid="uid://bq58vgit8i6fu" path="res://assets/FlanLogoPixelArt.webp" id="2_7mycd"]
+[ext_resource type="Texture2D" path="res://assets/FlanLogoPixelArt.png" id="2_lquwl"]
 [ext_resource type="Texture2D" uid="uid://bqh7al1p2lmwk" path="res://assets/pause.webp" id="3_lquwl"]
 
 [sub_resource type="SystemFont" id="SystemFont_1bvp3"]
@@ -173,12 +174,35 @@ offset_top = -8.5
 offset_bottom = 8.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
-[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer"]
+[node name="HBoxContainer" type="HSplitContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "CPU"
 vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Chip 'N' im 8 Emulator by FlanGran.de"
+horizontal_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer/HBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("2_7mycd")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="CPUInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
 custom_minimum_size = Vector2(0, 58)
