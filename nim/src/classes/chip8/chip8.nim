@@ -109,6 +109,7 @@ type
         gameDescription*: string
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
         savedStates*: seq[Chip8State]  # Store states as a sequence instead of a table
+        specialSaveState*: Chip8State  # Special save state slot separate from step states
 
 # Type to store the decoded components of an opcode
 type
@@ -670,3 +671,47 @@ proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): b
     tickTimers(chip8)
     
     return didDrawInFrame
+
+# Special save state management
+proc saveSpecialState*(chip8: var Chip8) =
+    chip8.specialSaveState = Chip8State(
+        memory: chip8.memory,
+        V: chip8.V,
+        I: chip8.I,
+        pc: chip8.pc,
+        gfx: chip8.gfx,
+        didDraw: chip8.didDraw,
+        delay_timer: chip8.delay_timer,
+        sound_timer: chip8.sound_timer,
+        stack: chip8.stack,
+        sp: chip8.sp,
+        key: chip8.key,
+        waitingForKey: chip8.waitingForKey,
+        waitingRegister: chip8.waitingRegister,
+        romName: chip8.romName,
+        step_counter: chip8.step_counter
+    )
+
+proc loadSpecialState*(chip8: var Chip8): bool =
+    # Check if the special state is initialized
+    if chip8.specialSaveState.romName.isEmptyOrWhitespace:
+        return false
+    
+    chip8.memory = chip8.specialSaveState.memory
+    chip8.V = chip8.specialSaveState.V
+    chip8.I = chip8.specialSaveState.I
+    chip8.pc = chip8.specialSaveState.pc
+    chip8.gfx = chip8.specialSaveState.gfx
+    chip8.didDraw = chip8.specialSaveState.didDraw
+    chip8.delay_timer = chip8.specialSaveState.delay_timer
+    chip8.sound_timer = chip8.specialSaveState.sound_timer
+    chip8.stack = chip8.specialSaveState.stack
+    chip8.sp = chip8.specialSaveState.sp
+    chip8.key = chip8.specialSaveState.key
+    chip8.waitingForKey = chip8.specialSaveState.waitingForKey
+    chip8.waitingRegister = chip8.specialSaveState.waitingRegister
+    chip8.step_counter = chip8.specialSaveState.step_counter
+    return true
+
+proc hasSpecialState*(chip8: Chip8): bool =
+    return not chip8.specialSaveState.romName.isEmptyOrWhitespace

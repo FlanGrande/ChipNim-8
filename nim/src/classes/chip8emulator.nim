@@ -12,6 +12,8 @@ type Chip8Emulator* {.gdsync.} = ptr object of Node2D
 # Note: signals must be defined at the top of the file
 proc rom_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
+proc special_state_saved(self: Chip8Emulator): Error {.gdsync, signal.}
+proc special_state_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc openRom*(self: Chip8Emulator, path: string): void
 proc emulateFrame*(self: Chip8Emulator): bool {.gdsync.}
 
@@ -143,3 +145,27 @@ proc emulateFrame*(self: Chip8Emulator): bool =
     self.chip8.tickTimers()
     
     return didDrawInFrame
+
+# Save the current state to the special save slot
+proc saveSpecialState*(self: Chip8Emulator) {.gdsync.} =
+  saveSpecialState(self.chip8)
+  print("Saved special state")
+  discard self.special_state_saved()
+
+# Load the state from the special save slot
+proc loadSpecialState*(self: Chip8Emulator): bool {.gdsync.} =
+  if not hasSpecialState(self.chip8):
+    print("No special state found to load")
+    return false
+    
+  let success = loadSpecialState(self.chip8)
+  if success:
+    print("Loaded special state")
+    discard self.special_state_loaded()
+    queue_redraw(self)
+    
+  return success
+
+# Check if a special state exists
+proc hasSpecialState*(self: Chip8Emulator): bool {.gdsync.} =
+  return hasSpecialState(self.chip8)

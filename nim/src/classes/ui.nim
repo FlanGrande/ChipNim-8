@@ -75,6 +75,8 @@ type UI* {.gdsync.} = ptr object of Control
   OpenRomButton* {.gdexport.}: Button
   FileDialog* {.gdexport.}: FileDialog
   PlayPauseButton* {.gdexport.}: CheckButton
+  SaveSpecialStateButton* {.gdexport.}: Button
+  LoadSpecialStateButton* {.gdexport.}: Button
   GameDescriptionLabel* {.gdexport.}: Label
   
   OpcodesScrollPanelContainer* {.gdexport.}: PanelContainer # This is the container that contains the scroll container
@@ -88,12 +90,16 @@ proc getStackLabelByIndex(self: UI, index: int): Label
 method ready(self: UI) {.gdsync.} =
   discard self.Chip8Emulator.connect("rom_loaded", self.callable("_on_rom_loaded"))
   discard self.Chip8Emulator.connect("update_debug_ui", self.callable("_on_chip8_emulator_update"))
+  discard self.Chip8Emulator.connect("special_state_saved", self.callable("_on_special_state_saved"))
+  discard self.Chip8Emulator.connect("special_state_loaded", self.callable("_on_special_state_loaded"))
   discard self.OpcodesScrollPanelContainer.connect("mouse_entered", self.callable("_on_opcodes_scroll_panel_container_mouse_entered"))
   discard self.OpcodesScrollPanelContainer.connect("mouse_exited", self.callable("_on_opcodes_scroll_panel_container_mouse_exited"))
   discard self.OpenRomButton.connect("pressed", self.callable("_on_open_rom_button_pressed"))
   discard self.FileDialog.connect("file_selected", self.callable("_on_file_dialog_file_selected"))
   discard self.FileDialog.connect("canceled", self.callable("_on_file_dialog_cancelled"))
   discard self.PlayPauseButton.connect("toggled", self.callable("_on_play_pause_button_toggled"))
+  discard self.SaveSpecialStateButton.connect("pressed", self.callable("_on_save_special_state_button_pressed"))
+  discard self.LoadSpecialStateButton.connect("pressed", self.callable("_on_load_special_state_button_pressed"))
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
   
   # Initialize stack labels to invisible
@@ -268,3 +274,17 @@ proc on_play_pause_button_toggled(self: UI) {.gdsync, name: "_on_play_pause_butt
     self.Chip8Emulator.pause()
   else:
     self.Chip8Emulator.resume()
+
+proc on_save_special_state_button_pressed(self: UI) {.gdsync, name: "_on_save_special_state_button_pressed".} =
+  self.Chip8Emulator.saveSpecialState()
+
+proc on_load_special_state_button_pressed(self: UI) {.gdsync, name: "_on_load_special_state_button_pressed".} =
+  discard self.Chip8Emulator.loadSpecialState()
+
+proc on_special_state_saved(self: UI) {.gdsync, name: "_on_special_state_saved".} =
+  # You can add visual feedback here if needed
+  discard
+
+proc on_special_state_loaded(self: UI) {.gdsync, name: "_on_special_state_loaded".} =
+  # You can add visual feedback here if needed
+  discard
