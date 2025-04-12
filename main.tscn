@@ -1122,11 +1122,61 @@ horizontal_alignment = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("2_lquwl")
-expand_mode = 3
+expand_mode = 2
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MemoryTitlePanel" type="Panel" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(280, 32)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryTitlePanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -8.5
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryTitlePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryTitlePanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Memory"
+vertical_alignment = 1
+
+[node name="MemoryInfoPanel" type="PanelContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryInfoPanel"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryInfoPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryInfoPanel/ScrollContainer/MarginContainer"]
+layout_mode = 2
 
 [node name="ColumnCenter" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI"]
 custom_minimum_size = Vector2(640, 0)
@@ -1287,7 +1337,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Opcodes"
+text = "Instructions"
 vertical_alignment = 1
 
 [node name="CheckButton" type="CheckButton" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer"]
