@@ -207,8 +207,7 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
 
   # Try to get opcode_label_<number>, if it exists but it's hidden, make it visible and change its content
   # Otherwise add a new one or reuse existing one if we reached the maximum
-
-  let opcodeLabelName = "opcode_label_" & $(self.Chip8Emulator.chip8.step_counter - 1)
+  let opcodeLabelName = &"opcode_label_{self.Chip8Emulator.chip8.step_counter - 1}"
   var opcodeLabel: Button = self.OpcodesVBox.get_node_or_null(opcodeLabelName) as Button
 
   if opcodeLabel != nil:
