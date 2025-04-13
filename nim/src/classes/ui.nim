@@ -227,7 +227,8 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
         self.Chip8Emulator.chip8.removeState(oldStepCounter.uint32)
       
       # Remove from its current position
-      self.OpcodesVBox.remove_child(opcodeLabel)
+      # self.OpcodesVBox.remove_child(opcodeLabel)
+      opcodeLabel.visible = false
       
       # Update name and text
       opcodeLabel.name = opcodeLabelName
@@ -238,7 +239,8 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
       discard opcodeLabel.connect("gui_input", self.callable("_on_opcode_label_gui_input").bind(self.Chip8Emulator.chip8.step_counter - 1))
       
       # Add it back at the end
-      self.OpcodesVBox.add_child(opcodeLabel)
+      self.OpcodesVBox.move_child(opcodeLabel, self.OpcodesVBox.get_child_count() - 1)
+      opcodeLabel.visible = true
     else:
       # Create a new label as before
       opcodeLabel = Button.instantiate opcodeLabelName
