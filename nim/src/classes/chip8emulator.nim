@@ -24,7 +24,7 @@ type Chip8Emulator* {.gdsync.} = ptr object of Node2D
 
 # Note: signals must be defined at the top of the file
 proc rom_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
-proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
+proc update_debug_ui(self: Chip8Emulator, update_opcodes: bool = true): Error {.gdsync, signal.}
 proc special_state_saved(self: Chip8Emulator): Error {.gdsync, signal.}
 proc special_state_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc openRom*(self: Chip8Emulator, path: string): void
