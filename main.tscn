@@ -112,6 +112,7 @@ OpcodesScrollContainer = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollCo
 OpcodesVBox = NodePath("DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
 OpcodeFollowCheckButton = NodePath("DebugUI/ColumnRight/OpcodesTitlePanel/MarginContainer/HBoxContainer/CheckButton")
 MemoryVBox = NodePath("DebugUI/ColumnLeft/HBoxContainer/VBoxContainer/MemoryInfoPanel/ScrollContainer/MarginContainer/VBoxContainer")
+maxOpcodesLabels = 44
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

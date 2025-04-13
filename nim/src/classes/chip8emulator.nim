@@ -12,6 +12,7 @@ import gdext/classes/gdAudioStreamGeneratorPlayback
 
 type Chip8Emulator* {.gdsync.} = ptr object of Node2D
   chip8*: Chip8
+  cyclesPerFrame* {.gdexport.}: int = 8
   isPaused*: bool
   audioStreamPlayer* {.gdexport.}: AudioStreamPlayer
   audioStreamGeneratorPlayback: GdRef[AudioStreamGeneratorPlayback]
@@ -34,7 +35,6 @@ method ready(self: Chip8Emulator) {.gdsync.} =
   self.openRom("roms/games/Animal Race [Brian Astle].ch8")
   self.audioStreamPlayer.play()
   self.audioStreamGeneratorPlayback = self.audioStreamPlayer.getStreamPlayback() as GdRef[AudioStreamGeneratorPlayback]
-  self.phase = 0.0
   self.sampleRate = 8000
   self.currentSineSample = 0
   self.freq = 440.0
@@ -161,17 +161,17 @@ proc openRom*(self: Chip8Emulator, path: string) {.gdsync.} =
   discard self.rom_loaded()
   queue_redraw(self)
 
-# Emulate a full frame (multiple cycles)
 proc emulateFrame*(self: Chip8Emulator): bool =
     var didDrawInFrame = false
     
-    for _ in 0..<8: # TODO: Hardcoded to 8 for now
+    for _ in 0..<self.cyclesPerFrame: # TODO: Hardcoded to 8 for now
         if self.chip8.waitingForKey:
             break
             
         let cycleResult = emulateCycle(self.chip8)
         discard self.update_debug_ui()
         queue_redraw(self)
+
         if not cycleResult:
             continue
             

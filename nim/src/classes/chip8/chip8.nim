@@ -202,6 +202,14 @@ proc removeStatesAfter*(chip8: var Chip8, stateIndex: uint32) =
     if stateIndex.int + 1 < chip8.savedStates.len:
         chip8.savedStates.setLen(stateIndex.int + 1)
 
+# Remove a specific state by its index
+proc removeState*(chip8: var Chip8, stateIndex: uint32) =
+    if stateIndex.int < chip8.savedStates.len:
+        # Create a default/empty state to replace the one we're removing
+        var emptyState: Chip8State
+        # Replace the state at the given index with the empty state
+        chip8.savedStates[stateIndex.int] = emptyState
+
 proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
 

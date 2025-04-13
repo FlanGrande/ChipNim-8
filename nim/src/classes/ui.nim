@@ -203,7 +203,6 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
       for j in 0..<parent.get_child_count():
         let child = parent.get_child(j) as Label
         child.visible = i <= self.Chip8Emulator.chip8.sp.int
-  
 
   # Try to get opcode_label_<number>, if it exists but it's hidden, make it visible and change its content
   # Otherwise add a new one or reuse existing one if we reached the maximum
@@ -218,6 +217,14 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
     if self.OpcodesVBox.get_child_count() >= self.maxOpcodesLabels:
       # Reuse the first (oldest) label by moving it to the end and renaming it
       opcodeLabel = self.OpcodesVBox.get_child(0) as Button
+      
+      # Get step counter from the label name to clear the corresponding saved state
+      let oldLabelName = $opcodeLabel.name
+      var oldStepCounter: int
+      if oldLabelName.startswith("opcode_label_"):
+        discard parseInt(oldLabelName, oldStepCounter, "opcode_label_".len)
+        # Remove the saved state for this old step counter
+        self.Chip8Emulator.chip8.removeState(oldStepCounter.uint32)
       
       # Remove from its current position
       self.OpcodesVBox.remove_child(opcodeLabel)
