@@ -3,6 +3,7 @@ import chip8/chip8
 import chip8emulator
 import std/strformat
 import std/parseutils
+import std/strutils
 
 import gdext/classes/gdNode
 import gdext/classes/gdControl
@@ -88,6 +89,9 @@ type UI* {.gdsync.} = ptr object of Control
 
   # Memory view panel
   MemoryVBox* {.gdexport.}: VBoxContainer
+  
+  # Maximum number of opcode labels to create before recycling
+  maxOpcodesLabels* {.gdexport.}: int = 100
 
 proc getStackLabelByIndex(self: UI, index: int): Label
 proc initMemoryDisplay(self: UI)
@@ -202,27 +206,44 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   
 
   # Try to get opcode_label_<number>, if it exists but it's hidden, make it visible and change its content
-  # Otherwise add a new one
+  # Otherwise add a new one or reuse existing one if we reached the maximum
 
   let opcodeLabelName = "opcode_label_" & $(self.Chip8Emulator.chip8.step_counter - 1)
   var opcodeLabel: Button = self.OpcodesVBox.get_node_or_null(opcodeLabelName) as Button
 
-  # TO DO: We need to TEST that the save/load states are actually corrrect
-  # E.g. We are not loading the state that was saved initially but the new one
   if opcodeLabel != nil:
     opcodeLabel.visible = true
     opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
   else:
-    # Append label with the current execution cycle to OpcodesVBox
-    opcodeLabel = Button.instantiate opcodeLabelName
-    opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
-    opcodeLabel.mouse_filter = mouseFilterPass
-    opcodeLabel.alignment = horizontalAlignmentLeft
-    
-    # Connect the click signal to the label
-    discard opcodeLabel.connect("gui_input", self.callable("_on_opcode_label_gui_input").bind(self.Chip8Emulator.chip8.step_counter - 1))
-    
-    self.OpcodesVBox.add_child(opcodeLabel)
+    # Check if we've reached the maximum number of labels
+    if self.OpcodesVBox.get_child_count() >= self.maxOpcodesLabels:
+      # Reuse the first (oldest) label by moving it to the end and renaming it
+      opcodeLabel = self.OpcodesVBox.get_child(0) as Button
+      
+      # Remove from its current position
+      self.OpcodesVBox.remove_child(opcodeLabel)
+      
+      # Update name and text
+      opcodeLabel.name = opcodeLabelName
+      opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
+      
+      # Reconnect the input signal with the new step counter
+      opcodeLabel.disconnect("gui_input", self.callable("_on_opcode_label_gui_input"))
+      discard opcodeLabel.connect("gui_input", self.callable("_on_opcode_label_gui_input").bind(self.Chip8Emulator.chip8.step_counter - 1))
+      
+      # Add it back at the end
+      self.OpcodesVBox.add_child(opcodeLabel)
+    else:
+      # Create a new label as before
+      opcodeLabel = Button.instantiate opcodeLabelName
+      opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
+      opcodeLabel.mouse_filter = mouseFilterPass
+      opcodeLabel.alignment = horizontalAlignmentLeft
+      
+      # Connect the click signal to the label
+      discard opcodeLabel.connect("gui_input", self.callable("_on_opcode_label_gui_input").bind(self.Chip8Emulator.chip8.step_counter - 1))
+      
+      self.OpcodesVBox.add_child(opcodeLabel)
 
   if self.OpcodeFollowCheckButton.button_pressed and not self.isUserHoveringOnOpcodesScrollPanelContainer:
     self.OpcodesScrollContainer.scroll_vertical = self.OpcodesVBox.get_child_count() * 200
@@ -238,21 +259,22 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load:
       self.Chip8Emulator.chip8.loadState(step_to_load)
       self.Chip8Emulator.update_display()
       var nodesToHide: seq[Button] = @[]
-      let currentStepCounter = self.Chip8Emulator.chip8.step_counter
       let prefixLen = "opcode_label_".len
 
-      # Remove all labels under the clicked one, as they are called opcode_label_<step_counter>
-      for i in currentStepCounter.int32..<self.OpcodesVBox.get_child_count():
+      # Check each child of OpcodesVBox to determine if it needs to be hidden
+      for i in 0..<self.OpcodesVBox.get_child_count():
         let child: Button = self.OpcodesVBox.get_child(i) as Button
         var childName = $child.name
         var childStepCounter: int
 
-        discard parseInt(childName, childStepCounter, prefixLen)
-
-        if childStepCounter.uint32 > step_to_load:
-          nodesToHide.add(child)
+        if childName.startswith("opcode_label_"):
+          discard parseInt(childName, childStepCounter, prefixLen)
+          
+          # Hide the label if its step counter is greater than the loaded state
+          if childStepCounter.uint32 > step_to_load:
+            nodesToHide.add(child)
       
-      # Remove all the nodes in the nodesToRemove sequence
+      # Hide all the nodes in the nodesToHide sequence
       for node in nodesToHide:
         node.visible = false
       
@@ -260,7 +282,7 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load:
       self.Chip8Emulator.chip8.removeStatesAfter(step_to_load)
       
       print("State loaded successfully")
-      print("Removed ", nodesToHide.len, " nodes")
+      print("Hidden ", nodesToHide.len, " nodes")
     else:
       print("No saved state found for step: ", step_to_load)
 
