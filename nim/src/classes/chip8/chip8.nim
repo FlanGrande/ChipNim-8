@@ -68,6 +68,7 @@ type
         I*: uint16                  # Index register
         pc*: uint16                 # Program counter
         step_counter*: uint32
+        current_instruction*: string
 
         # Graphics state
         gfx*: array[DISPLAY_SIZE, uint8]  # Graphics: 64x32 monochrome display
@@ -516,6 +517,8 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     chip8.gameDescription = "This ROM doesn't have a description file."
     chip8.step_counter = 0
     chip8.savedStates = initOrderedTable[uint32, Chip8State]()
+    chip8.current_instruction = ""
+    chip8.specialSaveState = Chip8State()
     chip8.maxSavedStates = 44  # Reset to default value when loading a new ROM
 
     let descriptionFile = filename.split(".")[0] & ".txt"
@@ -703,7 +706,8 @@ proc saveSpecialState*(chip8: var Chip8) =
         waitingForKey: chip8.waitingForKey,
         waitingRegister: chip8.waitingRegister,
         romName: chip8.romName,
-        step_counter: chip8.step_counter
+        step_counter: chip8.step_counter,
+        current_instruction: chip8.current_instruction
     )
 
 proc loadSpecialState*(chip8: var Chip8): bool =
@@ -725,6 +729,7 @@ proc loadSpecialState*(chip8: var Chip8): bool =
     chip8.waitingForKey = chip8.specialSaveState.waitingForKey
     chip8.waitingRegister = chip8.specialSaveState.waitingRegister
     chip8.step_counter = chip8.specialSaveState.step_counter
+    chip8.current_instruction = chip8.specialSaveState.current_instruction
     return true
 
 proc hasSpecialState*(chip8: Chip8): bool =

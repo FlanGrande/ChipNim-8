@@ -321,6 +321,15 @@ proc on_load_special_state_button_pressed(self: UI) {.gdsync, name: "_on_load_sp
     # Special state loaded successfully, so clear the opcode list
     self.clearOpcodes()
 
+    # Get the first label
+    let opcodeLabel = self.OpcodesVBox.get_child(0) as Button
+    opcodeLabel.visible = true
+    opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
+
+    # Reconnect the input signal with the new step counter
+    opcodeLabel.disconnect("gui_input", self.callable("_on_opcode_label_gui_input"))
+    discard opcodeLabel.connect("gui_input", self.callable("_on_opcode_label_gui_input").bind(self.Chip8Emulator.chip8.step_counter - 1))
+
 proc on_special_state_saved(self: UI) {.gdsync, name: "_on_special_state_saved".} =
   # You can add visual feedback here if needed
   discard
