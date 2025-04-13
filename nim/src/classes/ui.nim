@@ -3,7 +3,6 @@ import chip8/chip8
 import chip8emulator
 import std/strformat
 import std/parseutils
-import std/strutils
 
 import gdext/classes/gdNode
 import gdext/classes/gdControl
@@ -342,7 +341,7 @@ proc updateMemoryDisplay(self: UI) =
   # Process each row (16 bytes per row)
   for row in 0..<(0x1000 div 16):
     let address = row * 16
-    let rowLabel = self.MemoryVBox.get_node("memory_row_" & $row) as Label
+    let rowLabel = self.MemoryVBox.get_node(&"memory_row_{row}") as Label
     
     if rowLabel == nil:
       continue
@@ -353,8 +352,8 @@ proc updateMemoryDisplay(self: UI) =
     # Build the hex and ASCII parts
     for offset in 0..<16:
       let byte = self.Chip8Emulator.chip8.memory[address + offset]
-      hexPart &= " " & $byte.toHex(2)
+      hexPart &= &" {byte:02X}"
       asciiPart &= getAsciiChar(byte)
     
     # Format the complete row
-    rowLabel.text = "0x" & address.toHex(3) & hexPart & " " & asciiPart
+    rowLabel.text = &"0x{address:03X} {hexPart} {asciiPart}"
