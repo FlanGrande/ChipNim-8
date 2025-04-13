@@ -4,6 +4,7 @@ import chip8emulator
 import std/strformat
 import std/parseutils
 import std/strutils
+import std/tables
 
 import gdext/classes/gdNode
 import gdext/classes/gdControl
@@ -258,6 +259,9 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
 
   # Update memory display with each UI update
   self.updateMemoryDisplay()
+
+  print("Opcode label count: ", self.OpcodesVBox.get_child_count())
+  print("Saved States: ", len(self.Chip8Emulator.chip8.savedStates))
 
 proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load: uint32) {.gdsync, name: "_on_opcode_label_gui_input".} =
   # Check if left mouse button was just pressed

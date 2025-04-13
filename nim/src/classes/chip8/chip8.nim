@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, strformat, std/os, std/streams, std/random, std/strutils, opcodes
+import globals, strformat, std/os, std/streams, std/random, std/strutils, opcodes, tables
 
 type
     Chip8State* = object
@@ -108,7 +108,7 @@ type
         romName*: string
         gameDescription*: string
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
-        savedStates*: seq[Chip8State]  # Store states as a sequence instead of a table
+        savedStates*: OrderedTable[uint32, Chip8State]  # Store states as a sequence instead of a table
         specialSaveState*: Chip8State  # Special save state slot separate from step states
         isBeeping*: bool
 
@@ -164,19 +164,15 @@ proc saveState*(chip8: var Chip8, stateIndex: uint32) =
         step_counter: chip8.step_counter
     )
     
-    # If stateIndex is beyond the current sequence length, extend the sequence
-    if stateIndex.int >= chip8.savedStates.len:
-        chip8.savedStates.setLen(stateIndex.int + 1)
-    
     # Set the state at the specified index
-    chip8.savedStates[stateIndex.int] = newState
+    chip8.savedStates[stateIndex] = newState
 
 # Restores the emulator to a previously saved state
 proc loadState*(chip8: var Chip8, stateIndex: uint32) =
-    if stateIndex.int >= chip8.savedStates.len:
+    if not chip8.savedStates.hasKey(stateIndex):
         return # State doesn't exist
     
-    let state = chip8.savedStates[stateIndex.int]
+    let state = chip8.savedStates[stateIndex]
     chip8.memory = state.memory
     chip8.V = state.V
     chip8.I = state.I
@@ -195,20 +191,17 @@ proc loadState*(chip8: var Chip8, stateIndex: uint32) =
 
 # Check if a state exists at the given index
 proc hasState*(chip8: Chip8, stateIndex: uint32): bool =
-    return stateIndex.int < chip8.savedStates.len and not chip8.savedStates[stateIndex.int].romName.isEmptyOrWhitespace
+    return chip8.savedStates.hasKey(stateIndex)
 
 # Remove states after a given index
 proc removeStatesAfter*(chip8: var Chip8, stateIndex: uint32) =
-    if stateIndex.int + 1 < chip8.savedStates.len:
-        chip8.savedStates.setLen(stateIndex.int + 1)
+    for i in stateIndex + 1..chip8.savedStates.len.uint32:
+        chip8.savedStates.del(i)
 
 # Remove a specific state by its index
 proc removeState*(chip8: var Chip8, stateIndex: uint32) =
-    if stateIndex.int < chip8.savedStates.len:
-        # Create a default/empty state to replace the one we're removing
-        var emptyState: Chip8State
-        # Replace the state at the given index with the empty state
-        chip8.savedStates[stateIndex.int] = emptyState
+    if chip8.savedStates.hasKey(stateIndex):
+        chip8.savedStates.del(stateIndex)
 
 proc advancePC*(chip8: var Chip8) =
     chip8.pc += 2
@@ -512,7 +505,7 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     chip8.romName = chip8.romName.split("(")[0].split("[")[0].replace(".ch8", "")
     chip8.gameDescription = "This ROM doesn't have a description file."
     chip8.step_counter = 0
-    chip8.savedStates = @[] # Initialize as empty sequence
+    chip8.savedStates = initOrderedTable[uint32, Chip8State]()
 
     let descriptionFile = filename.split(".")[0] & ".txt"
     if fileExists(descriptionFile):
