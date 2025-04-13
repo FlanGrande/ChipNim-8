@@ -56,7 +56,7 @@ kk or byte - An 8-bit value, the lowest 8 bits of the instruction
 
 ]#
 
-import globals, strformat, std/os, std/streams, std/random, std/strutils, audio, opcodes
+import globals, strformat, std/os, std/streams, std/random, std/strutils, opcodes
 
 type
     Chip8State* = object
@@ -110,6 +110,7 @@ type
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
         savedStates*: seq[Chip8State]  # Store states as a sequence instead of a table
         specialSaveState*: Chip8State  # Special save state slot separate from step states
+        isBeeping*: bool
 
 # Type to store the decoded components of an opcode
 type
@@ -125,7 +126,7 @@ proc initChip8*(): Chip8 =
     result = Chip8()
     result.pc = PROGRAM_START              # Programs start at 0x200
     result.didDraw = false
-
+    result.isBeeping = false
     for i in 0..<FONTSET.len:
         result.memory[FONTSET_START + i] = FONTSET[i]
 
@@ -135,9 +136,9 @@ proc tickTimers*(chip8: var Chip8) =
 
     if chip8.sound_timer > 0:
         dec chip8.sound_timer
-        beep()
+        chip8.isBeeping = true
     else:
-        unbeep()
+        chip8.isBeeping = false
 
 proc readMemory*(chip8: var Chip8, address: uint16): uint16 =
     result = (chip8.memory[address].uint16 shl 8) or chip8.memory[address + 1].uint16

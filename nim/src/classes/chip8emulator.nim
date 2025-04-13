@@ -1,14 +1,25 @@
 import gdext
+import math
 import chip8/chip8
 import chip8/globals
 
 import gdext/classes/gdNode2D
 import gdext/classes/gdInputEvent
 import gdext/classes/gdInputEventKey
+import gdext/classes/gdAudioStreamPlayer
+import gdext/classes/gdAudioStream
+import gdext/classes/gdAudioStreamGeneratorPlayback
 
 type Chip8Emulator* {.gdsync.} = ptr object of Node2D
   chip8*: Chip8
   isPaused*: bool
+  audioStreamPlayer* {.gdexport.}: AudioStreamPlayer
+  audioStreamGeneratorPlayback: GdRef[AudioStreamGeneratorPlayback]
+  phase*: float64
+  sampleRate*: int
+  currentSineSample*: int
+  freq*: float64
+
 # Note: signals must be defined at the top of the file
 proc rom_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
@@ -16,10 +27,18 @@ proc special_state_saved(self: Chip8Emulator): Error {.gdsync, signal.}
 proc special_state_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc openRom*(self: Chip8Emulator, path: string): void
 proc emulateFrame*(self: Chip8Emulator): bool {.gdsync.}
+proc fill_buffer(self: Chip8Emulator) {.gdsync.}
 
 method ready(self: Chip8Emulator) {.gdsync.} =
   self.chip8 = initChip8()
   self.openRom("roms/games/Animal Race [Brian Astle].ch8")
+  self.audioStreamPlayer.play()
+  self.audioStreamGeneratorPlayback = self.audioStreamPlayer.getStreamPlayback() as GdRef[AudioStreamGeneratorPlayback]
+  self.phase = 0.0
+  self.sampleRate = 8000
+  self.currentSineSample = 0
+  self.freq = 440.0
+  self.fill_buffer()
 
 method draw(self: Chip8Emulator) {.gdsync.} =
   for i in 0..<DISPLAY_SIZE:
@@ -38,6 +57,25 @@ method process(self: Chip8Emulator, delta: float64) {.gdsync.} =
   if not self.isPaused:
     discard self.emulateFrame()
 
+    if self.chip8.isBeeping:
+      self.fill_buffer()
+    else:
+      self.currentSineSample = 0
+
+proc fill_buffer(self: Chip8Emulator) =
+  var minimumAudio: int = (self.sampleRate * sizeof(float32)) div 2
+  var toFill: int32 = self.audioStreamGeneratorPlayback[].getFramesAvailable()
+
+  if toFill < minimumAudio:
+    var samples: seq[float32]
+    samples.setLen(self.sampleRate)
+
+    for i in 0..<samples.len:
+      let time = self.currentSineSample / self.sampleRate
+      samples[i] = sin(self.freq * time * 2.0 * PI)
+      inc self.currentSineSample
+      discard self.audioStreamGeneratorPlayback[].pushFrame(vector2(1.0, 1.0) * samples[i])
+      toFill -= 1
 
 # Method to force update the display after loading a state
 proc update_display*(self: Chip8Emulator) {.gdsync.} =

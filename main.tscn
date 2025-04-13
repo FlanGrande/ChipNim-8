@@ -3,8 +3,7 @@
 [ext_resource type="Theme" uid="uid://boe52symcx6jd" path="res://chip8theme.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dvx4owakyry2b" path="res://scenes/chip8emulator.tscn" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://dgrhok0dpai3d" path="res://assets/play.webp" id="2_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://bq58vgit8i6fu" path="res://assets/FlanLogoPixelArt.webp" id="2_7mycd"]
-[ext_resource type="Texture2D" path="res://assets/FlanLogoPixelArt.png" id="2_lquwl"]
+[ext_resource type="Texture2D" uid="uid://bq58vgit8i6fu" path="res://assets/FlanLogoPixelArt.webp" id="2_lquwl"]
 [ext_resource type="Texture2D" uid="uid://bqh7al1p2lmwk" path="res://assets/pause.webp" id="3_lquwl"]
 
 [sub_resource type="SystemFont" id="SystemFont_1bvp3"]
@@ -41,6 +40,10 @@ shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_1bvp3"]
 thickness = 2
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_lquwl"]
+mix_rate = 7920.0
+buffer_length = 0.2
 
 [node name="Main" type="Node2D"]
 
@@ -200,7 +203,7 @@ horizontal_alignment = 2
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/DebugUI/ColumnLeft/CPUTitlePanel/MarginContainer/HBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-texture = ExtResource("2_7mycd")
+texture = ExtResource("2_lquwl")
 expand_mode = 2
 stretch_mode = 4
 
@@ -1393,5 +1396,9 @@ theme_override_constants/margin_bottom = 16
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DebugUI/ColumnRight/OpcodesInfoPanel/ScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Chip8Emulator" parent="CanvasLayer" instance=ExtResource("1_ig7tw")]
+[node name="Chip8Emulator" parent="CanvasLayer" node_paths=PackedStringArray("audioStreamPlayer") instance=ExtResource("1_ig7tw")]
+audioStreamPlayer = NodePath("../../AudioStreamPlayer")
 position = Vector2(744, 0)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamGenerator_lquwl")
