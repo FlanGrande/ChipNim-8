@@ -264,7 +264,6 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
   print("Saved States: ", len(self.Chip8Emulator.chip8.savedStates))
 
 proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load: uint32) {.gdsync, name: "_on_opcode_label_gui_input".} =
-  # Check if left mouse button was just pressed
   if event[].is_class("InputEventMouseButton") and event[].is_action_pressed("left_click"):
     print("Loading state for step: ", step_to_load)
     if self.Chip8Emulator.chip8.hasState(step_to_load):
@@ -273,7 +272,6 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load:
       var nodesToHide: seq[Button] = @[]
       let prefixLen = "opcode_label_".len
 
-      # Check each child of OpcodesVBox to determine if it needs to be hidden
       for i in 0..<self.OpcodesVBox.get_child_count():
         let child: Button = self.OpcodesVBox.get_child(i) as Button
         var childName = $child.name
@@ -282,16 +280,15 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load:
         if childName.startswith("opcode_label_"):
           discard parseInt(childName, childStepCounter, prefixLen)
           
-          # Hide the label if its step counter is greater than the loaded state
           if childStepCounter.uint32 > step_to_load:
             nodesToHide.add(child)
       
-      # Hide all the nodes in the nodesToHide sequence
       for node in nodesToHide:
         node.visible = false
       
-      # Remove saved states after the current one
       self.Chip8Emulator.chip8.removeStatesAfter(step_to_load)
+
+      self.update_debug_ui()
       
       print("State loaded successfully")
       print("Hidden ", nodesToHide.len, " nodes")
@@ -336,7 +333,7 @@ proc on_special_state_saved(self: UI) {.gdsync, name: "_on_special_state_saved".
 
 proc on_special_state_loaded(self: UI) {.gdsync, name: "_on_special_state_loaded".} =
   # Update memory display after loading a state
-  self.updateMemoryDisplay()
+  self.update_debug_ui()
 
 # Memory display functions
 proc isDisplayableAscii(byte: uint8): bool =
