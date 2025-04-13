@@ -26,8 +26,8 @@ proc update_debug_ui(self: Chip8Emulator): Error {.gdsync, signal.}
 proc special_state_saved(self: Chip8Emulator): Error {.gdsync, signal.}
 proc special_state_loaded(self: Chip8Emulator): Error {.gdsync, signal.}
 proc openRom*(self: Chip8Emulator, path: string): void
-proc emulateFrame*(self: Chip8Emulator): bool {.gdsync.}
-proc fill_buffer(self: Chip8Emulator) {.gdsync.}
+proc emulateFrame*(self: Chip8Emulator): bool
+proc fill_buffer(self: Chip8Emulator)
 
 method ready(self: Chip8Emulator) {.gdsync.} =
   self.chip8 = initChip8()

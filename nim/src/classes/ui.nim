@@ -321,7 +321,7 @@ proc initMemoryDisplay(self: UI) =
   
   # Create a label for each row of memory (16 bytes per row)
   for row in 0..<(0x1000 div 16):
-    let label = Label.instantiate("memory_row_" & $row)
+    let label = Label.instantiate(&"memory_row_{row}")
     label.text = ""
     
     # Using a monospace font without loading external resources
