@@ -109,6 +109,7 @@ method ready(self: UI) {.gdsync.} =
   discard self.PlayPauseButton.connect("toggled", self.callable("_on_play_pause_button_toggled"))
   discard self.SaveSpecialStateButton.connect("pressed", self.callable("_on_save_special_state_button_pressed"))
   discard self.LoadSpecialStateButton.connect("pressed", self.callable("_on_load_special_state_button_pressed"))
+  discard self.OpcodeFollowCheckButton.connect("toggled", self.callable("_on_opcode_follow_check_button_toggled"))
   self.isUserHoveringOnOpcodesScrollPanelContainer = false
   
   # Initialize stack labels to invisible
@@ -199,7 +200,8 @@ proc update_debug_ui(self: UI, update_opcodes: bool = true) {.gdsync, name: "_on
         let child = parent.get_child(j) as Label
         child.visible = i <= self.Chip8Emulator.chip8.sp.int
 
-  if update_opcodes:
+  # Only update opcodes if requested AND the Follow toggle is enabled
+  if update_opcodes and self.OpcodeFollowCheckButton.button_pressed:
     # Try to get opcode_label_<number>, if it exists but it's hidden, make it visible and change its content
     # Otherwise add a new one or reuse existing one if we reached the maximum
     let opcodeLabelName = &"opcode_label_{self.Chip8Emulator.chip8.step_counter - 1}"
@@ -241,6 +243,7 @@ proc update_debug_ui(self: UI, update_opcodes: bool = true) {.gdsync, name: "_on
         
         self.OpcodesVBox.add_child(opcodeLabel)
 
+    # Only auto-scroll if Follow is on and user isn't hovering over the panel
     if self.OpcodeFollowCheckButton.button_pressed and not self.isUserHoveringOnOpcodesScrollPanelContainer:
       self.OpcodesScrollContainer.scroll_vertical = self.OpcodesVBox.get_child_count() * 200
 
@@ -314,15 +317,31 @@ proc on_save_special_state_button_pressed(self: UI) {.gdsync, name: "_on_save_sp
   self.Chip8Emulator.saveSpecialState()
 
 proc on_load_special_state_button_pressed(self: UI) {.gdsync, name: "_on_load_special_state_button_pressed".} =
-  discard self.Chip8Emulator.loadSpecialState()
+  if self.Chip8Emulator.loadSpecialState():
+    # Special state loaded successfully, so clear the opcode list
+    self.clearOpcodes()
 
 proc on_special_state_saved(self: UI) {.gdsync, name: "_on_special_state_saved".} =
   # You can add visual feedback here if needed
   discard
 
 proc on_special_state_loaded(self: UI) {.gdsync, name: "_on_special_state_loaded".} =
+  # Clear opcode list when a special state is loaded
+  self.clearOpcodes()
   # Update memory display after loading a state
   self.update_debug_ui()
+
+# Add new handler for OpcodeFollowCheckButton
+proc on_opcode_follow_check_button_toggled(self: UI, button_pressed: bool) {.gdsync, name: "_on_opcode_follow_check_button_toggled".} =
+  # If the button is being turned on after being off, clear the opcodes list
+  if button_pressed:
+    self.clearOpcodes()
+    self.Chip8Emulator.chip8.saveStatesFrozen = false
+  else:
+    self.Chip8Emulator.chip8.saveStatesFrozen = true  
+  
+  # When toggled off, it freezes the current list
+  # When toggled on, it will start adding new opcodes again (handled in update_debug_ui)
 
 # Memory display functions
 proc isDisplayableAscii(byte: uint8): bool =

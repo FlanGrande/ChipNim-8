@@ -110,8 +110,9 @@ type
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
         savedStates*: OrderedTable[uint32, Chip8State]  # Store states as a sequence instead of a table
         specialSaveState*: Chip8State  # Special save state slot separate from step states
-        isBeeping*: bool
         maxSavedStates*: uint32        # Maximum number of saved states to keep in memory
+        saveStatesFrozen*: bool        # Whether the save states are frozen (no new ones can be added)
+        isBeeping*: bool
 
 # Type to store the decoded components of an opcode
 type
@@ -647,8 +648,9 @@ proc executeOpcode*(chip8: var Chip8, decoded: DecodedOpcode): bool =
     
     chip8.step_counter += 1
 
-    # Save the state of the emulator
-    chip8.saveState(chip8.step_counter - 1)
+    if not chip8.saveStatesFrozen:
+        # Save the state of the emulator
+        chip8.saveState(chip8.step_counter - 1)
 
     return true
 
