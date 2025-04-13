@@ -13,6 +13,7 @@ import gdext/classes/gdAudioStreamGeneratorPlayback
 type Chip8Emulator* {.gdsync.} = ptr object of Node2D
   chip8*: Chip8
   cyclesPerFrame* {.gdexport.}: int = 8
+  maxSavedStates* {.gdexport.}: int = 44
   isPaused*: bool
   audioStreamPlayer* {.gdexport.}: AudioStreamPlayer
   audioStreamGeneratorPlayback: GdRef[AudioStreamGeneratorPlayback]
@@ -32,6 +33,7 @@ proc fill_buffer(self: Chip8Emulator)
 
 method ready(self: Chip8Emulator) {.gdsync.} =
   self.chip8 = initChip8()
+  self.chip8.maxSavedStates = self.maxSavedStates.uint32
   self.openRom("roms/games/Animal Race [Brian Astle].ch8")
   self.audioStreamPlayer.play()
   self.audioStreamGeneratorPlayback = self.audioStreamPlayer.getStreamPlayback() as GdRef[AudioStreamGeneratorPlayback]

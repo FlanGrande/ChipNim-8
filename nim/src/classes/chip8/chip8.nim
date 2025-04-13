@@ -111,6 +111,7 @@ type
         savedStates*: OrderedTable[uint32, Chip8State]  # Store states as a sequence instead of a table
         specialSaveState*: Chip8State  # Special save state slot separate from step states
         isBeeping*: bool
+        maxSavedStates*: uint32        # Maximum number of saved states to keep in memory
 
 # Type to store the decoded components of an opcode
 type
@@ -127,6 +128,7 @@ proc initChip8*(): Chip8 =
     result.pc = PROGRAM_START              # Programs start at 0x200
     result.didDraw = false
     result.isBeeping = false
+    result.maxSavedStates = 1000           # Default maximum number of saved states
     for i in 0..<FONTSET.len:
         result.memory[FONTSET_START + i] = FONTSET[i]
 
@@ -166,6 +168,13 @@ proc saveState*(chip8: var Chip8, stateIndex: uint32) =
     
     # Set the state at the specified index
     chip8.savedStates[stateIndex] = newState
+    
+    # If we've exceeded the maximum number of saved states, remove the oldest one
+    if chip8.savedStates.len > chip8.maxSavedStates.int:
+        # This seems kind of stupid but I couldn't find a better way of removing the first element?
+        for key in chip8.savedStates.keys:
+            chip8.savedStates.del(key)
+            break
 
 # Restores the emulator to a previously saved state
 proc loadState*(chip8: var Chip8, stateIndex: uint32) =
@@ -506,6 +515,7 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     chip8.gameDescription = "This ROM doesn't have a description file."
     chip8.step_counter = 0
     chip8.savedStates = initOrderedTable[uint32, Chip8State]()
+    chip8.maxSavedStates = 44  # Reset to default value when loading a new ROM
 
     let descriptionFile = filename.split(".")[0] & ".txt"
     if fileExists(descriptionFile):

@@ -90,13 +90,11 @@ type UI* {.gdsync.} = ptr object of Control
 
   # Memory view panel
   MemoryVBox* {.gdexport.}: VBoxContainer
-  
-  # Maximum number of opcode labels to create before recycling
-  maxOpcodesLabels* {.gdexport.}: int = 100
 
 proc getStackLabelByIndex(self: UI, index: int): Label
 proc initMemoryDisplay(self: UI)
 proc updateMemoryDisplay(self: UI)
+proc clearOpcodes(self: UI)
 
 method ready(self: UI) {.gdsync.} =
   discard self.Chip8Emulator.connect("rom_loaded", self.callable("_on_rom_loaded"))
@@ -143,11 +141,7 @@ proc getStackLabelByIndex(self: UI, index: int): Label =
     else: return nil
 
 proc rom_loaded(self: UI) {.gdsync, name: "_on_rom_loaded".} =
-  # Clean Opcodes window
-  for i in 0..<self.OpcodesVBox.get_child_count():
-    let child = self.OpcodesVBox.get_child(i) as Button
-    child.visible = false
-
+  self.clearOpcodes()
   self.RomNameLabel.text = self.Chip8Emulator.chip8.romName
   self.GameDescriptionLabel.text = self.Chip8Emulator.chip8.gameDescription
   
@@ -215,17 +209,9 @@ proc update_debug_ui(self: UI) {.gdsync, name: "_on_chip8_emulator_update".} =
     opcodeLabel.text = self.Chip8Emulator.chip8.current_instruction
   else:
     # Check if we've reached the maximum number of labels
-    if self.OpcodesVBox.get_child_count() >= self.maxOpcodesLabels:
+    if self.OpcodesVBox.get_child_count() >= self.Chip8Emulator.maxSavedStates:
       # Reuse the first (oldest) label by moving it to the end and renaming it
       opcodeLabel = self.OpcodesVBox.get_child(0) as Button
-      
-      # Get step counter from the label name to clear the corresponding saved state
-      let oldLabelName = $opcodeLabel.name
-      var oldStepCounter: int
-      if oldLabelName.startswith("opcode_label_"):
-        discard parseInt(oldLabelName, oldStepCounter, "opcode_label_".len)
-        # Remove the saved state for this old step counter
-        self.Chip8Emulator.chip8.removeState(oldStepCounter.uint32)
       
       # Remove from its current position
       # self.OpcodesVBox.remove_child(opcodeLabel)
@@ -268,7 +254,6 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load:
     print("Loading state for step: ", step_to_load)
     if self.Chip8Emulator.chip8.hasState(step_to_load):
       self.Chip8Emulator.chip8.loadState(step_to_load)
-      self.Chip8Emulator.update_display()
       var nodesToHide: seq[Button] = @[]
       let prefixLen = "opcode_label_".len
 
@@ -288,6 +273,7 @@ proc on_opcode_label_gui_input(self: UI, event: GdRef[InputEvent], step_to_load:
       
       self.Chip8Emulator.chip8.removeStatesAfter(step_to_load)
 
+      self.Chip8Emulator.update_display()
       self.update_debug_ui()
       
       print("State loaded successfully")
@@ -388,3 +374,9 @@ proc updateMemoryDisplay(self: UI) =
     
     # Format the complete row
     rowLabel.text = &"0x{address:03X} {hexPart} {asciiPart}"
+
+proc clearOpcodes(self: UI) =
+  # Clean Opcodes window
+  for i in 0..<self.OpcodesVBox.get_child_count():
+    let child = self.OpcodesVBox.get_child(i) as Button
+    child.visible = false
