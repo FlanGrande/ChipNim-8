@@ -516,8 +516,8 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     chip8.romName = chip8.romName.split("(")[0].split("[")[0].replace(".ch8", "")
     chip8.gameDescription = "This ROM doesn't have a description file."
     chip8.step_counter = 0
-    chip8.savedStates = initOrderedTable[uint32, Chip8State]()
     chip8.current_instruction = ""
+    chip8.savedStates = initOrderedTable[uint32, Chip8State]()
     chip8.specialSaveState = Chip8State()
     chip8.maxSavedStates = 44  # Reset to default value when loading a new ROM
 
@@ -528,16 +528,12 @@ proc loadRom*(chip8: var Chip8, filename: string) =
             chip8.gameDescription = d.readAll()
             d.close()
 
-# New functions for fetch-decode-execute cycle
-
-# Fetch the next opcode
 proc fetchOpcode*(chip8: var Chip8): uint16 =
     if chip8.waitingForKey:
         return 0
     result = readMemory(chip8, chip8.pc)
     advancePC(chip8)
 
-# Decode the opcode into its components
 proc decodeOpcode*(opcode: uint16): DecodedOpcode =
     result.opcode = opcode
     result.nnn = opcode and MASK_NNN
@@ -546,12 +542,9 @@ proc decodeOpcode*(opcode: uint16): DecodedOpcode =
     result.n = (opcode and MASK_N).uint8
     result.kk = (opcode and MASK_KK).uint8
 
-# Execute a decoded opcode
 proc executeOpcode*(chip8: var Chip8, decoded: DecodedOpcode): bool =
-    # Reset the didDraw flag before executing
     chip8.didDraw = false
     
-    # Skip execution if waiting for key
     if chip8.waitingForKey:
         return false
     
@@ -652,23 +645,15 @@ proc executeOpcode*(chip8: var Chip8, decoded: DecodedOpcode): bool =
     chip8.step_counter += 1
 
     if not chip8.saveStatesFrozen:
-        # Save the state of the emulator
         chip8.saveState(chip8.step_counter - 1)
 
     return true
 
-# Execute a single emulation cycle
 proc emulateCycle*(chip8: var Chip8): bool =
-    # Fetch
     let opcode = fetchOpcode(chip8)
-    
-    # Decode
     let decoded = decodeOpcode(opcode)
-    
-    # Execute
     return executeOpcode(chip8, decoded)
 
-# Emulate a full frame (multiple cycles)
 proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): bool =
     var didDrawInFrame = false
     
@@ -680,16 +665,13 @@ proc emulateFrame*(chip8: var Chip8, cyclesPerFrame: int = OPCODES_PER_FRAME): b
         if not cycleResult:
             continue
             
-        # Check if we drew to the screen
         if chip8.didDraw:
             didDrawInFrame = true
     
-    # Update timers at the end of the frame
     tickTimers(chip8)
     
     return didDrawInFrame
 
-# Special save state management
 proc saveSpecialState*(chip8: var Chip8) =
     chip8.specialSaveState = Chip8State(
         memory: chip8.memory,
@@ -711,7 +693,6 @@ proc saveSpecialState*(chip8: var Chip8) =
     )
 
 proc loadSpecialState*(chip8: var Chip8): bool =
-    # Check if the special state is initialized
     if chip8.specialSaveState.romName.isEmptyOrWhitespace:
         return false
     

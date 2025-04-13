@@ -79,7 +79,6 @@ proc fill_buffer(self: Chip8Emulator) =
       discard self.audioStreamGeneratorPlayback[].pushFrame(vector2(1.0, 1.0) * samples[i])
       toFill -= 1
 
-# Method to force update the display after loading a state
 proc update_display*(self: Chip8Emulator) {.gdsync.} =
   queue_redraw(self)
 
@@ -166,7 +165,7 @@ proc openRom*(self: Chip8Emulator, path: string) {.gdsync.} =
 proc emulateFrame*(self: Chip8Emulator): bool =
     var didDrawInFrame = false
     
-    for _ in 0..<self.cyclesPerFrame: # TODO: Hardcoded to 8 for now
+    for _ in 0..<self.cyclesPerFrame:
         if self.chip8.waitingForKey:
             break
             
@@ -177,22 +176,18 @@ proc emulateFrame*(self: Chip8Emulator): bool =
         if not cycleResult:
             continue
             
-        # Check if we drew to the screen
         if self.chip8.didDraw:
             didDrawInFrame = true
     
-    # Update timers at the end of the frame
     self.chip8.tickTimers()
     
     return didDrawInFrame
 
-# Save the current state to the special save slot
 proc saveSpecialState*(self: Chip8Emulator) {.gdsync.} =
   saveSpecialState(self.chip8)
   print("Saved special state")
   discard self.special_state_saved()
 
-# Load the state from the special save slot
 proc loadSpecialState*(self: Chip8Emulator): bool {.gdsync.} =
   if not hasSpecialState(self.chip8):
     print("No special state found to load")
@@ -206,6 +201,5 @@ proc loadSpecialState*(self: Chip8Emulator): bool {.gdsync.} =
     
   return success
 
-# Check if a special state exists
 proc hasSpecialState*(self: Chip8Emulator): bool {.gdsync.} =
   return hasSpecialState(self.chip8)
