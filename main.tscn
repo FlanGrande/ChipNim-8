@@ -1402,3 +1402,4 @@ position = Vector2(744, 0)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamGenerator_lquwl")
+volume_db = -24.0
