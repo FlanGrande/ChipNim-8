@@ -1397,6 +1397,7 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 
 [node name="Chip8Emulator" parent="CanvasLayer" node_paths=PackedStringArray("audioStreamPlayer") instance=ExtResource("1_ig7tw")]
+maxSavedStates = 1000
 audioStreamPlayer = NodePath("../../AudioStreamPlayer")
 position = Vector2(744, 0)
 
