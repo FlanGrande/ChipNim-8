@@ -8,7 +8,7 @@ Chip'N'im-8 (pronounced Chip 'N' Nim 8) is a Chip-8 emulator implemented in Nim 
 - Godot-powered UI for ROM selection and debugging
 - Real-time visualization of emulator state
 
-## Demo
+## Demo (Click image to go to Youtube)
 
 [![Chip'N'im-8 in action](https://img.youtube.com/vi/PKBQE-y-lE0/0.jpg)](https://youtu.be/PKBQE-y-lE0)
 
