@@ -10,7 +10,7 @@ Chip'N'im-8 (pronounced Chip 'N' Nim 8) is a Chip-8 emulator implemented in Nim 
 
 ## Demo
 
-![Chip'N'im-8 in action](https://youtu.be/PKBQE-y-lE0)
+[Chip'N'im-8 in action](https://youtu.be/PKBQE-y-lE0)
 
 ## Getting Started
 
