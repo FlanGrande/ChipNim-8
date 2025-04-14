@@ -76,7 +76,7 @@ proc fill_buffer(self: Chip8Emulator) =
       let time = self.currentSineSample / self.sampleRate
       samples[i] = sin(self.freq * time * 2.0 * PI)
       inc self.currentSineSample
-      discard self.audioStreamGeneratorPlayback[].pushFrame(vector2(1.0, 1.0) * samples[i])
+      discard self.audioStreamGeneratorPlayback[].pushFrame(Vector2.One * samples[i])
       toFill -= 1
 
 proc update_display*(self: Chip8Emulator) {.gdsync.} =
