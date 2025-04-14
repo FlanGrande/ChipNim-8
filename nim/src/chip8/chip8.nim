@@ -111,7 +111,7 @@ type
         didDraw*: bool                 # Flag to indicate if the screen was drawn during the last frame
         savedStates*: OrderedTable[uint32, Chip8State]  # Store states as a sequence instead of a table
         specialSaveState*: Chip8State  # Special save state slot separate from step states
-        maxSavedStates*: uint32        # Maximum number of saved states to keep in memory
+        maxSavedStates*: uint32 = 1000 # Maximum number of saved states to keep in memory
         saveStatesFrozen*: bool        # Whether the save states are frozen (no new ones can be added)
         isBeeping*: bool
 
@@ -130,7 +130,6 @@ proc initChip8*(): Chip8 =
     result.pc = PROGRAM_START              # Programs start at 0x200
     result.didDraw = false
     result.isBeeping = false
-    result.maxSavedStates = 1000           # Default maximum number of saved states
     for i in 0..<FONTSET.len:
         result.memory[FONTSET_START + i] = FONTSET[i]
 
@@ -519,7 +518,6 @@ proc loadRom*(chip8: var Chip8, filename: string) =
     chip8.current_instruction = ""
     chip8.savedStates = initOrderedTable[uint32, Chip8State]()
     chip8.specialSaveState = Chip8State()
-    chip8.maxSavedStates = 44  # Reset to default value when loading a new ROM
 
     let descriptionFile = filename.split(".")[0] & ".txt"
     if fileExists(descriptionFile):
